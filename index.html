@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Wedding RSVP website for Moksha Shah and Qasim Raza at The Calyx, Sydney Botanic Gardens."
+    />
+    <title>Moksha Shah & Qasim Raza Wedding RSVP</title>
+    <link rel="icon" href="/images/garden-hero.png" type="image/png" />
+    <link rel="preload" href="/images/garden-hero.png" as="image" />
+  </head>
+  <body>
+    <div class="gate" id="guestGate" aria-labelledby="gateTitle">
+      <div class="gate__shade" aria-hidden="true"></div>
+      <form class="gate-panel" id="gateForm" novalidate>
+        <p class="eyebrow">Wedding invitation</p>
+        <h1 id="gateTitle">Moksha Shah & Qasim Raza</h1>
+        <div class="field-row gate-name-row">
+          <label class="field" for="gateFirstName">
+            <span>First name</span>
+            <input
+              id="gateFirstName"
+              name="firstName"
+              type="text"
+              autocomplete="given-name"
+              placeholder="First name"
+              required
+            />
+          </label>
+          <label class="field" for="gateLastName">
+            <span>Last name</span>
+            <input
+              id="gateLastName"
+              name="lastName"
+              type="text"
+              autocomplete="family-name"
+              placeholder="Last name"
+              required
+            />
+          </label>
+        </div>
+        <p class="form-message" id="gateMessage" aria-live="polite"></p>
+        <button class="button button--primary" type="submit">Enter invitation</button>
+      </form>
+    </div>
+
+    <div class="site-shell" id="siteShell" hidden>
+      <header class="site-header">
+        <a class="brand" href="#home" aria-label="Wedding home">
+          <span>M & Q</span>
+        </a>
+        <nav class="site-nav" aria-label="Wedding sections">
+          <a href="#details">Details</a>
+          <a href="#schedule">Schedule</a>
+          <a href="#rsvp">RSVP</a>
+          <a id="adminNavLink" href="#admin" hidden>Admin</a>
+        </nav>
+        <div class="guest-chip">
+          <span id="guestNameDisplay"></span>
+          <button id="changeGuest" type="button">Change</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero" id="home" aria-labelledby="heroTitle">
+          <div class="hero__shade" aria-hidden="true"></div>
+          <div class="hero__content">
+            <p class="eyebrow">You are cordially invited to the wedding of</p>
+            <h1 id="heroTitle">
+              Moksha Shah
+              <span>&</span>
+              Qasim Raza
+            </h1>
+            <div class="hero__details" aria-label="Wedding summary">
+              <span>The Calyx</span>
+              <span>Sydney Botanic Gardens</span>
+              <span>13 March 2027 at 9:00 AM</span>
+            </div>
+            <div class="hero__actions">
+              <a class="button button--primary" href="#rsvp">RSVP</a>
+              <a
+                class="button button--ghost"
+                href="https://www.google.com/maps/search/?api=1&query=The%20Calyx%20Sydney%20Botanic%20Gardens"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View map
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section class="details-band" id="details" aria-labelledby="detailsTitle">
+          <div class="section-heading">
+            <p class="eyebrow">Wedding day</p>
+            <h2 id="detailsTitle">The invitation</h2>
+          </div>
+          <div class="detail-grid">
+            <article class="detail-card">
+              <span>Date</span>
+              <strong>13 March 2027</strong>
+              <p>Saturday morning</p>
+            </article>
+            <article class="detail-card">
+              <span>Time</span>
+              <strong>9:00 AM</strong>
+              <p>Guest arrival from the morning program</p>
+            </article>
+            <article class="detail-card">
+              <span>Venue</span>
+              <strong>The Calyx</strong>
+              <p>Sydney Botanic Gardens</p>
+            </article>
+          </div>
+          <div class="countdown" aria-label="Countdown to wedding">
+            <div>
+              <strong id="daysCount">0</strong>
+              <span>Days</span>
+            </div>
+            <div>
+              <strong id="hoursCount">0</strong>
+              <span>Hours</span>
+            </div>
+            <div>
+              <strong id="minutesCount">0</strong>
+              <span>Minutes</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="schedule-band" id="schedule" aria-labelledby="scheduleTitle">
+          <div class="section-heading">
+            <p class="eyebrow">Program</p>
+            <h2 id="scheduleTitle">Ceremonies and celebrations</h2>
+          </div>
+          <ol class="timeline">
+            <li>
+              <span>01</span>
+              <div>
+                <h3>Hindu Ceremony</h3>
+                <p>The day begins at The Calyx.</p>
+              </div>
+            </li>
+            <li>
+              <span>02</span>
+              <div>
+                <h3>Lunch</h3>
+                <p>A shared meal after the morning ceremony.</p>
+              </div>
+            </li>
+            <li>
+              <span>03</span>
+              <div>
+                <h3>Nikkah Ceremony</h3>
+                <p>The afternoon ceremony for family and friends.</p>
+              </div>
+            </li>
+            <li>
+              <span>04</span>
+              <div>
+                <h3>Reception Dinner</h3>
+                <p>An evening celebration to close the day.</p>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <section class="rsvp-band" id="rsvp" aria-labelledby="rsvpTitle">
+          <div class="section-heading">
+            <p class="eyebrow">RSVP</p>
+            <h2 id="rsvpTitle">Join the celebration</h2>
+          </div>
+          <div class="rsvp-layout">
+            <form class="rsvp-form" id="rsvpForm" novalidate>
+              <div class="field-row">
+                <label class="field" for="rsvpName">
+                  <span>Name</span>
+                  <input id="rsvpName" name="name" type="text" autocomplete="name" readonly required />
+                </label>
+                <label class="field compact inline-compact" for="guestCount">
+                  <span>Guests in party</span>
+                  <input id="guestCount" name="guestCount" type="number" min="1" max="10" value="1" required />
+                </label>
+              </div>
+
+              <fieldset class="choice-group">
+                <legend>Attendance</legend>
+                <label class="choice">
+                  <input type="radio" name="attendance" value="Attending" checked />
+                  <span>Attending</span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="attendance" value="Unable to attend" />
+                  <span>Unable to attend</span>
+                </label>
+              </fieldset>
+
+              <fieldset class="event-group" id="eventGroup">
+                <legend>Events</legend>
+                <label class="event-choice">
+                  <input type="checkbox" name="events" value="Hindu Ceremony" checked />
+                  <span>Hindu Ceremony</span>
+                </label>
+                <label class="event-choice">
+                  <input type="checkbox" name="events" value="Lunch" checked />
+                  <span>Lunch</span>
+                </label>
+                <label class="event-choice">
+                  <input type="checkbox" name="events" value="Nikkah Ceremony" checked />
+                  <span>Nikkah Ceremony</span>
+                </label>
+                <label class="event-choice">
+                  <input type="checkbox" name="events" value="Reception Dinner" checked />
+                  <span>Reception Dinner</span>
+                </label>
+              </fieldset>
+
+              <div class="field-row">
+                <label class="field" for="dietary">
+                  <span>Dietary notes</span>
+                  <textarea id="dietary" name="dietary" rows="3"></textarea>
+                </label>
+                <label class="field" for="message">
+                  <span>Note for Moksha & Qasim</span>
+                  <textarea id="message" name="message" rows="3"></textarea>
+                </label>
+              </div>
+
+              <p class="form-message" id="rsvpMessage" aria-live="polite"></p>
+              <div class="form-actions">
+                <button class="button button--primary" id="rsvpSubmitButton" type="submit">
+                  Submit RSVP
+                </button>
+                <button class="button button--secondary" id="calendarButton" type="button">Add to calendar</button>
+              </div>
+            </form>
+
+            <aside class="rsvp-confirmation" id="rsvpConfirmation" aria-live="polite">
+              <p class="eyebrow">Response</p>
+              <h3>Awaiting RSVP</h3>
+              <p id="rsvpSummary">Your response will appear here after submission.</p>
+              <button class="button button--ghost" id="downloadRsvp" type="button" disabled>
+                Download RSVP
+              </button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="admin-band" id="admin" aria-labelledby="adminTitle" hidden>
+          <div class="section-heading">
+            <p class="eyebrow">Admin</p>
+            <h2 id="adminTitle">Guest list and responses</h2>
+          </div>
+
+          <div class="admin-sheetbar">
+            <p id="adminSheetStatus">Google Sheet sync is not connected yet.</p>
+            <a
+              class="button button--secondary"
+              id="adminSheetLink"
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              hidden
+            >
+              Open Google Sheet
+            </a>
+          </div>
+
+          <div class="admin-panel" id="adminGuestsPanel">
+            <div class="admin-stats" id="adminStats" aria-label="RSVP summary"></div>
+            <div class="admin-tools">
+              <label class="field admin-search" for="guestSearch">
+                <span>Search guests</span>
+                <input id="guestSearch" type="search" placeholder="Name, status, response" />
+              </label>
+              <button class="button button--secondary" id="exportGuests" type="button">Export CSV</button>
+            </div>
+            <div class="guest-table-wrap">
+              <table class="guest-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Guest</th>
+                    <th scope="col">Group</th>
+                    <th scope="col">Invited</th>
+                    <th scope="col">Invite status</th>
+                    <th scope="col">Response</th>
+                    <th scope="col">Notes</th>
+                  </tr>
+                </thead>
+                <tbody id="guestTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p>Moksha Shah & Qasim Raza</p>
+        <a
+          href="https://www.google.com/maps/search/?api=1&query=The%20Calyx%20Sydney%20Botanic%20Gardens"
+          target="_blank"
+          rel="noreferrer"
+        >
+          The Calyx, Sydney Botanic Gardens
+        </a>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
