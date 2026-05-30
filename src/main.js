@@ -27,8 +27,12 @@ const rsvpSubmitButton = document.querySelector("#rsvpSubmitButton");
 const rsvpConfirmation = document.querySelector("#rsvpConfirmation");
 const rsvpSummary = document.querySelector("#rsvpSummary");
 const downloadRsvp = document.querySelector("#downloadRsvp");
+const editRsvpButton = document.querySelector("#editRsvpButton");
+const rsvpUpdateNote = document.querySelector("#rsvpUpdateNote");
 const calendarButton = document.querySelector("#calendarButton");
-const eventGroup = document.querySelector("#eventGroup");
+const guestCountInput = document.querySelector("#guestCount");
+const attendeeSection = document.querySelector("#attendeeSection");
+const attendeeList = document.querySelector("#attendeeList");
 const guestTableBody = document.querySelector("#guestTableBody");
 const adminStats = document.querySelector("#adminStats");
 const adminSheetStatus = document.querySelector("#adminSheetStatus");
@@ -41,6 +45,7 @@ let responses = loadResponses();
 let remoteResponses = {};
 let adminSnapshotRequest = null;
 let currentResponse = null;
+const MAX_GUEST_COUNT = 10;
 
 function normalizeName(value) {
   return value.trim().replace(/\s+/g, " ");
@@ -219,22 +224,22 @@ function resetRsvpForm(name) {
   rsvpConfirmation.querySelector("h3").textContent = "Awaiting RSVP";
   rsvpSummary.textContent = "Your response will appear here after submission.";
   downloadRsvp.disabled = true;
-  setEventControls(true);
+  downloadRsvp.hidden = false;
+  editRsvpButton.hidden = true;
+  rsvpUpdateNote.hidden = true;
+  guestCountInput.value = "1";
+  setAttendeeControls(true);
+  renderAttendeeFields([{ name, dietary: "" }]);
 }
 
 function hydrateRsvp(rsvp) {
   rsvpName.value = rsvp.name || currentSession.name;
   rsvpForm.guestCount.value = rsvp.guestCount || 1;
-  rsvpForm.dietary.value = rsvp.dietary || "";
-  rsvpForm.message.value = rsvp.message || "";
   setCheckedValue("attendance", rsvp.attendance);
 
-  const selectedEvents = new Set(rsvp.events || []);
-  rsvpForm.querySelectorAll("input[name='events']").forEach((input) => {
-    input.checked = selectedEvents.has(input.value);
-  });
-
-  setEventControls(rsvp.attendance !== "Unable to attend");
+  const isAttending = rsvp.attendance !== "Unable to attend";
+  setAttendeeControls(isAttending);
+  renderAttendeeFields(isAttending ? attendeesForRsvp(rsvp) : []);
   rsvpSubmitButton.textContent = "Update RSVP";
   renderConfirmation(rsvp);
 }
@@ -253,18 +258,27 @@ function setCheckedValue(name, value) {
 function getFormData() {
   const data = new FormData(rsvpForm);
   const now = new Date().toISOString();
+  const attendance = String(data.get("attendance") || "");
+  const isAttending = attendance === "Attending";
+  const guestCount = isAttending ? Number(data.get("guestCount") || 1) : 0;
+  const attendees = isAttending
+    ? Array.from(attendeeList.querySelectorAll(".attendee-card")).map((card) => ({
+        name: normalizeName(card.querySelector("[data-attendee-name]").value),
+        dietary: normalizeName(card.querySelector("[data-attendee-dietary]").value),
+      }))
+    : [];
+
   return {
     id: responseIdForSession(currentSession),
     name: currentSession.name,
+    rsvpOwner: currentSession.name,
     firstName: currentSession.firstName,
     lastName: currentSession.lastName,
     guestListId: currentSession.guestListId,
     guestListName: currentSession.guestListName,
-    attendance: String(data.get("attendance") || ""),
-    guestCount: Number(data.get("guestCount") || 1),
-    events: data.getAll("events").map(String),
-    dietary: String(data.get("dietary") || "").trim(),
-    message: String(data.get("message") || "").trim(),
+    attendance,
+    guestCount,
+    attendees,
     submittedAt: currentResponse?.submittedAt || now,
     updatedAt: now,
   };
@@ -279,12 +293,18 @@ function validateRsvp(rsvp) {
     return "Please select your attendance.";
   }
 
-  if (rsvp.attendance === "Attending" && rsvp.events.length === 0) {
-    return "Please select at least one event.";
+  if (rsvp.attendance === "Attending" && (rsvp.guestCount < 1 || rsvp.guestCount > MAX_GUEST_COUNT)) {
+    return "Please enter a party size between 1 and 10.";
   }
 
-  if (rsvp.guestCount < 1 || rsvp.guestCount > 10) {
-    return "Please enter a party size between 1 and 10.";
+  if (rsvp.attendance === "Attending") {
+    if (rsvp.attendees.length !== rsvp.guestCount) {
+      return "Please add details for every guest in your party.";
+    }
+
+    if (rsvp.attendees.some((attendee) => !isFullName(attendee.name))) {
+      return "Please enter each attendee's full name.";
+    }
   }
 
   return "";
@@ -307,31 +327,92 @@ function setRsvpMessage(message, type = "info") {
 
 function renderConfirmation(rsvp) {
   const isAttending = rsvp.attendance === "Attending";
-  const events = rsvp.events.length ? rsvp.events.join(", ") : "No events selected";
+  const names = attendeesForRsvp(rsvp).map((attendee) => attendee.name).filter(Boolean);
 
   rsvpConfirmation.querySelector("h3").textContent = isAttending
     ? "RSVP saved"
     : "Response saved";
   rsvpSummary.textContent = isAttending
-    ? `${rsvp.name} is attending with a party of ${rsvp.guestCount}. Events: ${events}.`
+    ? `${rsvp.name} is attending with ${rsvp.guestCount} guest${rsvp.guestCount === 1 ? "" : "s"}: ${names.join(", ")}.`
     : `${rsvp.name} is unable to attend.`;
   downloadRsvp.disabled = false;
+  editRsvpButton.hidden = false;
+  rsvpUpdateNote.hidden = false;
   rsvpSubmitButton.textContent = "Update RSVP";
 }
 
-function setEventControls(enabled) {
-  eventGroup.classList.toggle("is-disabled", !enabled);
-  eventGroup.querySelectorAll("input").forEach((input) => {
-    input.disabled = !enabled;
-    if (!enabled) {
-      input.checked = false;
-    }
-  });
+function attendeesForRsvp(rsvp) {
+  if (Array.isArray(rsvp.attendees) && rsvp.attendees.length) {
+    return rsvp.attendees.map((attendee) => ({
+      name: normalizeName(attendee.name || ""),
+      dietary: normalizeName(attendee.dietary || ""),
+    }));
+  }
 
-  if (enabled && !eventGroup.querySelector("input:checked")) {
-    eventGroup.querySelectorAll("input").forEach((input) => {
-      input.checked = true;
-    });
+  if (rsvp.attendance === "Attending") {
+    return [{ name: rsvp.name || currentSession?.name || "", dietary: normalizeName(rsvp.dietary || "") }];
+  }
+
+  return [];
+}
+
+function fieldCountFromGuestCount(value) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return 1;
+  }
+  return Math.min(Math.max(Math.floor(numericValue), 1), MAX_GUEST_COUNT);
+}
+
+function setAttendeeControls(enabled) {
+  attendeeSection.hidden = !enabled;
+  guestCountInput.disabled = !enabled;
+  guestCountInput.required = enabled;
+
+  if (!enabled) {
+    guestCountInput.value = "0";
+    attendeeList.innerHTML = "";
+    return;
+  }
+
+  if (Number(guestCountInput.value) < 1) {
+    guestCountInput.value = "1";
+  }
+}
+
+function readCurrentAttendees() {
+  return Array.from(attendeeList.querySelectorAll(".attendee-card")).map((card) => ({
+    name: normalizeName(card.querySelector("[data-attendee-name]").value),
+    dietary: normalizeName(card.querySelector("[data-attendee-dietary]").value),
+  }));
+}
+
+function renderAttendeeFields(existingAttendees = readCurrentAttendees()) {
+  const count = fieldCountFromGuestCount(guestCountInput.value || existingAttendees.length || 1);
+  const numericValue = Number(guestCountInput.value);
+  if (!Number.isFinite(numericValue) || numericValue < 1) {
+    guestCountInput.value = String(count);
+  }
+  attendeeList.innerHTML = "";
+
+  for (let index = 0; index < count; index += 1) {
+    const attendee = existingAttendees[index] || { name: index === 0 ? currentSession?.name || "" : "", dietary: "" };
+    const card = document.createElement("div");
+    card.className = "attendee-card";
+    card.innerHTML = `
+      <div class="attendee-card__title">Guest ${index + 1}</div>
+      <label class="field" for="attendeeName${index}">
+        <span>Full Name</span>
+        <input id="attendeeName${index}" name="attendeeName${index}" type="text" autocomplete="name" data-attendee-name required />
+      </label>
+      <label class="field" for="attendeeDietary${index}">
+        <span>Dietary notes</span>
+        <textarea id="attendeeDietary${index}" name="attendeeDietary${index}" rows="2" data-attendee-dietary></textarea>
+      </label>
+    `;
+    card.querySelector("[data-attendee-name]").value = attendee.name;
+    card.querySelector("[data-attendee-dietary]").value = attendee.dietary;
+    attendeeList.append(card);
   }
 }
 
@@ -358,14 +439,17 @@ function downloadBlob(contents, filename, type) {
 }
 
 function rsvpText(rsvp) {
+  const attendeeText = attendeesForRsvp(rsvp)
+    .map((attendee) => `- ${attendee.name}${attendee.dietary ? ` (${attendee.dietary})` : ""}`)
+    .join("\n");
+
   return [
     "Wedding RSVP: Moksha Shah & Qasim Raza",
     `Name: ${rsvp.name}`,
     `Attendance: ${rsvp.attendance}`,
     `Guests in party: ${rsvp.guestCount}`,
-    `Events: ${rsvp.events.length ? rsvp.events.join(", ") : "None"}`,
-    `Dietary notes: ${rsvp.dietary || "None"}`,
-    `Note for Moksha & Qasim: ${rsvp.message || "None"}`,
+    "Attendees:",
+    attendeeText || "None",
     `Submitted: ${new Date(rsvp.submittedAt).toLocaleString()}`,
     `Last updated: ${new Date(rsvp.updatedAt).toLocaleString()}`,
   ].join("\n");
@@ -394,9 +478,13 @@ async function syncToGoogleSheets(rsvp) {
     return "local";
   }
 
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 6000);
+
   await fetch(SHEETS_ENDPOINT, {
     method: "POST",
     mode: "no-cors",
+    signal: controller.signal,
     headers: {
       "Content-Type": "text/plain;charset=utf-8",
     },
@@ -404,12 +492,44 @@ async function syncToGoogleSheets(rsvp) {
       action: "upsertRsvp",
       response: rsvp,
     }),
-  });
+  }).finally(() => window.clearTimeout(timeout));
 
-  return "sent";
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    await new Promise((resolve) => window.setTimeout(resolve, 800));
+    try {
+      const snapshot = await fetchSheetsSnapshot(4000);
+      if (snapshot?.ok && sheetSnapshotHasRsvp(snapshot, rsvp)) {
+        return "sent";
+      }
+    } catch {
+      // no-cors POSTs cannot be inspected directly, so verification is best-effort.
+    }
+  }
+
+  return "unverified";
 }
 
-function fetchSheetsSnapshot() {
+function sheetSnapshotHasRsvp(snapshot, rsvp) {
+  const synced = snapshot.responses?.[rsvp.id] || snapshot.responses?.[guestKey(rsvp.name)];
+  if (!synced || synced.attendance !== rsvp.attendance) {
+    return false;
+  }
+
+  if (rsvp.attendance === "Unable to attend") {
+    return synced.guestCount === 0;
+  }
+
+  const syncedAttendees = attendeesForRsvp(synced);
+  if (synced.guestCount !== rsvp.guestCount || syncedAttendees.length !== rsvp.attendees.length) {
+    return false;
+  }
+
+  const syncedNames = syncedAttendees.map((attendee) => guestKey(attendee.name)).sort();
+  const localNames = rsvp.attendees.map((attendee) => guestKey(attendee.name)).sort();
+  return localNames.every((name, index) => name === syncedNames[index]);
+}
+
+function fetchSheetsSnapshot(timeoutMs = 10000) {
   if (!SHEETS_ENDPOINT) {
     return Promise.resolve(null);
   }
@@ -421,7 +541,7 @@ function fetchSheetsSnapshot() {
     const timeout = window.setTimeout(() => {
       cleanup();
       reject(new Error("Sheet snapshot timed out."));
-    }, 10000);
+    }, timeoutMs);
 
     function cleanup() {
       window.clearTimeout(timeout);
@@ -505,6 +625,44 @@ function getGuestResponseLabel(guest, response) {
   return guest.seedResponse || "Awaiting";
 }
 
+function allResponses() {
+  return {
+    ...remoteResponses,
+    ...responses,
+  };
+}
+
+function allGuestRows() {
+  return Object.values(allResponses())
+    .flatMap((response) => {
+      if (response.attendance === "Attending") {
+        return attendeesForRsvp(response).map((attendee) => ({
+          name: attendee.name,
+          response: "Attending",
+          dietary: attendee.dietary,
+          updatedAt: response.updatedAt || "",
+        }));
+      }
+
+      if (response.attendance === "Unable to attend") {
+        return [{
+          name: response.name || response.rsvpOwner || "Guest",
+          response: "Declined",
+          dietary: "",
+          updatedAt: response.updatedAt || "",
+        }];
+      }
+
+      return [];
+    })
+    .sort((a, b) => {
+      if (a.response !== b.response) {
+        return a.response === "Attending" ? -1 : 1;
+      }
+      return a.name.localeCompare(b.name);
+    });
+}
+
 function renderAdmin() {
   renderAdminSheetLink();
   renderAdminStats();
@@ -513,30 +671,17 @@ function renderAdmin() {
 }
 
 function renderAdminStats() {
-  const tableRows = GUEST_LIST.map((guest) => ({
-    guest,
-    response: responseForGuest(guest),
-  }));
-  const invited = GUEST_LIST.reduce(
-    (sum, guest) => sum + (Number.isFinite(Number(guest.invitedCount)) ? Number(guest.invitedCount) : 0),
-    0,
-  );
-  const attending = tableRows.reduce(
-    (sum, row) => sum + (row.response?.attendance === "Attending" ? Number(row.response.guestCount) : 0),
-    0,
-  );
-  const declined = tableRows.filter(
-    (row) => row.response?.attendance === "Unable to attend" || row.guest.seedResponse === "Declined",
-  ).length;
-  const awaiting = tableRows.filter((row) => getGuestResponseLabel(row.guest, row.response) === "Awaiting").length;
+  const rows = allGuestRows();
+  const attending = rows.filter((row) => row.response === "Attending").length;
+  const declined = rows.filter((row) => row.response === "Declined").length;
+  const dietaryNotes = rows.filter((row) => row.dietary).length;
 
   adminStats.innerHTML = "";
   [
-    ["Guest rows", GUEST_LIST.length],
-    ["Invited count", invited],
+    ["Rows", rows.length],
     ["Attending", attending],
     ["Declined", declined],
-    ["Awaiting", awaiting],
+    ["Dietary notes", dietaryNotes],
   ].forEach(([label, value]) => {
     const card = document.createElement("article");
     card.className = "admin-stat";
@@ -547,94 +692,64 @@ function renderAdminStats() {
 
 function renderGuestTable() {
   const query = guestSearch.value.trim().toLowerCase();
-  const rows = GUEST_LIST.map((guest) => {
-    const response = responseForGuest(guest);
-    const responseLabel = getGuestResponseLabel(guest, response);
-    return {
-      guest,
-      response,
-      responseLabel,
-      searchable: [
-        guest.name,
-        guest.side,
-        guest.group,
-        guest.inviteStatus,
-        responseLabel,
-        guest.notes,
-        response?.message,
-        response?.dietary,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase(),
-    };
-  }).filter((row) => !query || row.searchable.includes(query));
+  const rows = allGuestRows().filter((row) => {
+    const searchable = [row.name, row.response, row.dietary, row.updatedAt]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return !query || searchable.includes(query);
+  });
 
   guestTableBody.innerHTML = "";
-  rows.forEach(({ guest, response, responseLabel }) => {
+  rows.forEach((row) => {
     const tr = document.createElement("tr");
-    tr.dataset.response = responseLabel.toLowerCase();
+    tr.dataset.response = row.response.toLowerCase();
 
     const nameCell = document.createElement("td");
     const name = document.createElement("strong");
-    name.textContent = guest.name;
-    const side = document.createElement("span");
-    side.textContent = `${guest.side} side`;
-    nameCell.append(name, side);
-
-    const groupCell = document.createElement("td");
-    groupCell.textContent = guest.group;
-
-    const invitedCell = document.createElement("td");
-    invitedCell.textContent = guest.invitedCount || "TBC";
-
-    const inviteStatusCell = document.createElement("td");
-    const inviteStatus = document.createElement("span");
-    inviteStatus.className = "status-pill";
-    inviteStatus.textContent = guest.inviteStatus;
-    inviteStatusCell.append(inviteStatus);
+    name.textContent = row.name;
+    nameCell.append(name);
 
     const responseCell = document.createElement("td");
     const responseStatus = document.createElement("span");
     responseStatus.className = "response-pill";
-    responseStatus.textContent = responseLabel;
+    responseStatus.textContent = row.response;
     responseCell.append(responseStatus);
 
-    const notesCell = document.createElement("td");
-    notesCell.textContent = [
-      guest.notes,
-      response?.dietary && `Dietary: ${response.dietary}`,
-      response?.message && `Msg: ${response.message}`,
-    ]
-      .filter(Boolean)
-      .join(" | ");
+    const dietaryCell = document.createElement("td");
+    dietaryCell.textContent = row.dietary || "";
 
-    tr.append(nameCell, groupCell, invitedCell, inviteStatusCell, responseCell, notesCell);
+    const updatedCell = document.createElement("td");
+    updatedCell.textContent = row.updatedAt ? new Date(row.updatedAt).toLocaleString() : "";
+
+    tr.append(nameCell, responseCell, dietaryCell, updatedCell);
     guestTableBody.append(tr);
   });
+
+  if (!rows.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 4;
+    td.textContent = "No submitted RSVP rows yet.";
+    tr.append(td);
+    guestTableBody.append(tr);
+  }
 }
 
 function guestRowsForExport() {
-  return GUEST_LIST.map((guest) => {
-    const response = responseForGuest(guest);
-    return {
-      Guest: guest.name,
-      Side: guest.side,
-      Group: guest.group,
-      Invited: guest.invitedCount || "",
-      "Invite status": guest.inviteStatus,
-      Response: getGuestResponseLabel(guest, response),
-      "Actual guest count": response?.attendance === "Attending" ? response.guestCount : "",
-      Events: response?.events?.join(", ") || "",
-      "Dietary notes": response?.dietary || "",
-      Message: response?.message || "",
-      Notes: guest.notes,
-      "Updated at": response?.updatedAt || "",
-    };
-  });
+  return allGuestRows().map((row) => ({
+    Name: row.name,
+    Response: row.response,
+    "Dietary notes": row.dietary,
+    "Updated at": row.updatedAt,
+  }));
 }
 
 function toCsv(rows) {
+  if (!rows.length) {
+    return "Name,Response,Dietary notes,Updated at";
+  }
+
   const headers = Object.keys(rows[0]);
   const csvRows = [
     headers.join(","),
@@ -669,7 +784,17 @@ changeGuest.addEventListener("click", () => {
 
 rsvpForm.addEventListener("change", (event) => {
   if (event.target.name === "attendance") {
-    setEventControls(event.target.value === "Attending");
+    const isAttending = event.target.value === "Attending";
+    setAttendeeControls(isAttending);
+    if (isAttending) {
+      renderAttendeeFields(readCurrentAttendees().length ? readCurrentAttendees() : [{ name: currentSession.name, dietary: "" }]);
+    }
+  }
+});
+
+rsvpForm.addEventListener("input", (event) => {
+  if (event.target === guestCountInput) {
+    renderAttendeeFields();
   }
 });
 
@@ -692,6 +817,8 @@ rsvpForm.addEventListener("submit", async (event) => {
     setRsvpMessage(
       syncStatus === "sent"
         ? "✓ RSVP confirmed. Your response has been sent to the wedding sheet."
+        : syncStatus === "unverified"
+          ? "✓ RSVP confirmed on this device. Sheet sync could not be verified yet."
         : "✓ RSVP confirmed. You can come back anytime to edit your response.",
       "success",
     );
@@ -710,6 +837,13 @@ downloadRsvp.addEventListener("click", () => {
   }
 
   downloadBlob(rsvpText(currentResponse), "qasim-raza-wedding-rsvp.txt", "text/plain");
+});
+
+editRsvpButton.addEventListener("click", () => {
+  rsvpForm.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.setTimeout(() => {
+    guestCountInput.focus();
+  }, 420);
 });
 
 calendarButton.addEventListener("click", () => {

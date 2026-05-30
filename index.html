@@ -54,7 +54,6 @@
         </a>
         <nav class="site-nav" aria-label="Wedding sections">
           <a href="#details">Details</a>
-          <a href="#schedule">Schedule</a>
           <a href="#rsvp">RSVP</a>
           <a id="adminNavLink" href="#admin" hidden>Admin</a>
         </nav>
@@ -70,6 +69,20 @@
             <source src="/videos/garden-hero-video.mp4" type="video/mp4" />
           </video>
           <div class="hero__shade" aria-hidden="true"></div>
+          <div class="hero__countdown countdown" aria-label="Countdown to wedding">
+            <div>
+              <strong id="daysCount">0</strong>
+              <span>Days</span>
+            </div>
+            <div>
+              <strong id="hoursCount">0</strong>
+              <span>Hours</span>
+            </div>
+            <div>
+              <strong id="minutesCount">0</strong>
+              <span>Minutes</span>
+            </div>
+          </div>
           <div class="hero__layout">
             <div class="hero__content">
               <p class="eyebrow">You are cordially invited to the wedding of</p>
@@ -79,7 +92,7 @@
                 <span>Qasim Raza</span>
               </h1>
               <p class="hero__intro">
-                A garden morning at The Calyx, followed by ceremonies, lunch, and dinner with the people they love.
+                A garden morning at The Calyx, Sydney Botanic Gardens, with the people they love.
               </p>
               <div class="hero__actions">
                 <a class="button button--primary" href="#rsvp">RSVP</a>
@@ -98,12 +111,6 @@
               <span>Saturday</span>
               <strong>13 March 2027</strong>
               <p>9:00 AM at The Calyx, Sydney Botanic Gardens</p>
-              <div class="hero__details">
-                <span>Hindu Ceremony</span>
-                <span>Lunch</span>
-                <span>Nikkah Ceremony</span>
-                <span>Reception Dinner</span>
-              </div>
             </aside>
 
           </div>
@@ -114,6 +121,7 @@
           <div class="section-heading">
             <p class="eyebrow">Wedding day</p>
             <h2 id="detailsTitle">The invitation</h2>
+            <p>All essential details in one place. The full agenda will be shared closer to the day.</p>
           </div>
           <div class="detail-grid">
             <article class="detail-card">
@@ -132,63 +140,13 @@
               <p>Sydney Botanic Gardens</p>
             </article>
           </div>
-          <div class="countdown" aria-label="Countdown to wedding">
-            <div>
-              <strong id="daysCount">0</strong>
-              <span>Days</span>
-            </div>
-            <div>
-              <strong id="hoursCount">0</strong>
-              <span>Hours</span>
-            </div>
-            <div>
-              <strong id="minutesCount">0</strong>
-              <span>Minutes</span>
-            </div>
-          </div>
-        </section>
-
-        <section class="schedule-band" id="schedule" aria-labelledby="scheduleTitle">
-          <div class="section-heading">
-            <p class="eyebrow">Program</p>
-            <h2 id="scheduleTitle">Ceremonies and celebrations</h2>
-          </div>
-          <ol class="timeline">
-            <li>
-              <span>01</span>
-              <div>
-                <h3>Hindu Ceremony</h3>
-                <p>The day begins at The Calyx.</p>
-              </div>
-            </li>
-            <li>
-              <span>02</span>
-              <div>
-                <h3>Lunch</h3>
-                <p>A shared meal after the morning ceremony.</p>
-              </div>
-            </li>
-            <li>
-              <span>03</span>
-              <div>
-                <h3>Nikkah Ceremony</h3>
-                <p>The afternoon ceremony for family and friends.</p>
-              </div>
-            </li>
-            <li>
-              <span>04</span>
-              <div>
-                <h3>Reception Dinner</h3>
-                <p>An evening celebration to close the day.</p>
-              </div>
-            </li>
-          </ol>
         </section>
 
         <section class="rsvp-band" id="rsvp" aria-labelledby="rsvpTitle">
           <div class="section-heading">
             <p class="eyebrow">RSVP</p>
             <h2 id="rsvpTitle">Join the celebration</h2>
+            <p>Submit once now, then come back with the same name anytime to update your response.</p>
           </div>
           <div class="rsvp-layout">
             <form class="rsvp-form" id="rsvpForm" novalidate>
@@ -215,35 +173,12 @@
                 </label>
               </fieldset>
 
-              <fieldset class="event-group" id="eventGroup">
-                <legend>Events</legend>
-                <label class="event-choice">
-                  <input type="checkbox" name="events" value="Hindu Ceremony" checked />
-                  <span>Hindu Ceremony</span>
-                </label>
-                <label class="event-choice">
-                  <input type="checkbox" name="events" value="Lunch" checked />
-                  <span>Lunch</span>
-                </label>
-                <label class="event-choice">
-                  <input type="checkbox" name="events" value="Nikkah Ceremony" checked />
-                  <span>Nikkah Ceremony</span>
-                </label>
-                <label class="event-choice">
-                  <input type="checkbox" name="events" value="Reception Dinner" checked />
-                  <span>Reception Dinner</span>
-                </label>
-              </fieldset>
-
-              <div class="field-row">
-                <label class="field" for="dietary">
-                  <span>Dietary notes</span>
-                  <textarea id="dietary" name="dietary" rows="3"></textarea>
-                </label>
-                <label class="field" for="message">
-                  <span>Note for Moksha & Qasim</span>
-                  <textarea id="message" name="message" rows="3"></textarea>
-                </label>
+              <div class="attendee-section" id="attendeeSection">
+                <div class="attendee-heading">
+                  <h3>Guest details</h3>
+                  <p>Enter each attendee's full name and any dietary notes.</p>
+                </div>
+                <div class="attendee-list" id="attendeeList"></div>
               </div>
 
               <p class="form-message" id="rsvpMessage" aria-live="polite"></p>
@@ -259,6 +194,13 @@
               <p class="eyebrow">Response</p>
               <h3>Awaiting RSVP</h3>
               <p id="rsvpSummary">Your response will appear here after submission.</p>
+              <div class="rsvp-update-note" id="rsvpUpdateNote" hidden>
+                <strong>Need to change something?</strong>
+                <span>Your saved response can be edited here anytime.</span>
+              </div>
+              <button class="button button--secondary" id="editRsvpButton" type="button" hidden>
+                Edit response
+              </button>
               <button class="button button--ghost" id="downloadRsvp" type="button" disabled>
                 Download RSVP
               </button>
@@ -299,12 +241,10 @@
               <table class="guest-table">
                 <thead>
                   <tr>
-                    <th scope="col">Guest</th>
-                    <th scope="col">Group</th>
-                    <th scope="col">Invited</th>
-                    <th scope="col">Invite status</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Response</th>
-                    <th scope="col">Notes</th>
+                    <th scope="col">Dietary Notes</th>
+                    <th scope="col">Updated At</th>
                   </tr>
                 </thead>
                 <tbody id="guestTableBody"></tbody>

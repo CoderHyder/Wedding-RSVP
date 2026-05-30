@@ -1,10 +1,14 @@
 const PARTY_SHEETS = ["Qasim", "Moksha"];
 const SUMMARY_SHEET = "Summary";
+const ALL_GUESTS_SHEET = "All Guests";
 const MAX_DATA_ROWS = 100;
 const BLOCK_WIDTH = 11;
+const ALL_GUESTS_WIDTH = 5;
 const FAMILY_START_COLUMN = 1;
 const FRIENDS_START_COLUMN = 13;
 const DATA_START_ROW = 6;
+const ALL_GUESTS_HEADER_ROW = 1;
+const ALL_GUESTS_DATA_ROW = 2;
 
 const COLORS = {
   ivory: "#FFFAF0",
@@ -32,6 +36,14 @@ const HEADERS = [
   "RSVP Message",
   "Notes",
   "Updated At",
+];
+
+const ALL_GUESTS_HEADERS = [
+  "Name",
+  "Response",
+  "Dietary Notes",
+  "Updated At",
+  "Submitter Key",
 ];
 
 const GROUP_BLOCKS = [
@@ -127,7 +139,7 @@ function doPost(event) {
   }
 
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  const result = upsertPartyResponse_(spreadsheet, payload.response);
+  const result = upsertAllGuestsResponse_(spreadsheet, payload.response);
   return jsonResponse({ ok: true, target: result });
 }
 
@@ -153,8 +165,86 @@ function doGet(event) {
 
 function setupWeddingRsvpWorkbook() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  PARTY_SHEETS.forEach((name) => writePartySheet_(getOrCreateSheet_(spreadsheet, name), name));
-  writeSummarySheet_(getOrCreateSheet_(spreadsheet, SUMMARY_SHEET));
+  writeAllGuestsSheet_(getOrCreateSheet_(spreadsheet, ALL_GUESTS_SHEET));
+}
+
+function writeAllGuestsSheet_(sheet) {
+  ensureAllGuestsSheet_(sheet);
+  sheet.setHiddenGridlines(false);
+  sheet.getRange(ALL_GUESTS_HEADER_ROW, 1, 1, ALL_GUESTS_WIDTH).setValues([ALL_GUESTS_HEADERS]);
+  styleHeader_(sheet.getRange(ALL_GUESTS_HEADER_ROW, 1, 1, 4));
+  sheet.getRange(ALL_GUESTS_HEADER_ROW, 5).setValue("Submitter Key");
+  sheet.hideColumns(5);
+  sheet.setFrozenRows(1);
+  sheet.setColumnWidth(1, 220);
+  sheet.setColumnWidth(2, 120);
+  sheet.setColumnWidth(3, 260);
+  sheet.setColumnWidth(4, 160);
+  applyDropdown_(sheet.getRange(ALL_GUESTS_DATA_ROW, 2, Math.max(sheet.getMaxRows() - 1, 1), 1), ["Attending", "Declined"]);
+}
+
+function ensureAllGuestsSheet_(sheet) {
+  if (sheet.getMaxColumns() < ALL_GUESTS_WIDTH) {
+    sheet.insertColumnsAfter(sheet.getMaxColumns(), ALL_GUESTS_WIDTH - sheet.getMaxColumns());
+  }
+  if (sheet.getMaxRows() < 50) {
+    sheet.insertRowsAfter(sheet.getMaxRows(), 50 - sheet.getMaxRows());
+  }
+
+  const header = sheet.getRange(ALL_GUESTS_HEADER_ROW, 1, 1, ALL_GUESTS_WIDTH).getValues()[0];
+  if (header.join("") !== ALL_GUESTS_HEADERS.join("")) {
+    sheet.getRange(ALL_GUESTS_HEADER_ROW, 1, 1, ALL_GUESTS_WIDTH).setValues([ALL_GUESTS_HEADERS]);
+  }
+  sheet.hideColumns(5);
+}
+
+function upsertAllGuestsResponse_(spreadsheet, response) {
+  const sheet = getOrCreateSheet_(spreadsheet, ALL_GUESTS_SHEET);
+  ensureAllGuestsSheet_(sheet);
+
+  const ownerKey = responseKey_(response);
+  deleteRowsForOwner_(sheet, ownerKey);
+
+  const updatedAt = response.updatedAt || new Date().toISOString();
+  const rows = response.attendance === "Attending"
+    ? attendeesForResponse_(response).map((attendee) => [
+        attendee.name,
+        "Attending",
+        attendee.dietary || "",
+        updatedAt,
+        ownerKey,
+      ])
+    : [[response.rsvpOwner || response.name || "Guest", "Declined", "", updatedAt, ownerKey]];
+
+  const startRow = Math.max(sheet.getLastRow() + 1, ALL_GUESTS_DATA_ROW);
+  sheet.getRange(startRow, 1, rows.length, ALL_GUESTS_WIDTH).setValues(rows);
+  sheet.getRange(startRow, 4, rows.length, 1).setNumberFormat("yyyy-mm-dd hh:mm");
+  styleBody_(sheet.getRange(startRow, 1, rows.length, 4));
+  sheet.hideColumns(5);
+
+  return { sheet: ALL_GUESTS_SHEET, rows: rows.length };
+}
+
+function deleteRowsForOwner_(sheet, ownerKey) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < ALL_GUESTS_DATA_ROW) return;
+
+  const keys = sheet.getRange(ALL_GUESTS_DATA_ROW, 5, lastRow - 1, 1).getValues();
+  for (let index = keys.length - 1; index >= 0; index -= 1) {
+    if (String(keys[index][0]) === ownerKey) {
+      sheet.deleteRow(ALL_GUESTS_DATA_ROW + index);
+    }
+  }
+}
+
+function attendeesForResponse_(response) {
+  const attendees = Array.isArray(response.attendees) ? response.attendees : [];
+  return attendees
+    .map((attendee) => ({
+      name: String(attendee.name || "").trim(),
+      dietary: String(attendee.dietary || "").trim(),
+    }))
+    .filter((attendee) => attendee.name);
 }
 
 function writePartySheet_(sheet, partyName) {
@@ -361,6 +451,50 @@ function findResponseTarget_(spreadsheet, response) {
 
 function readSnapshot_(spreadsheet) {
   const responses = {};
+  const allGuestsSheet = spreadsheet.getSheetByName(ALL_GUESTS_SHEET);
+
+  if (allGuestsSheet) {
+    ensureAllGuestsSheet_(allGuestsSheet);
+    const lastRow = allGuestsSheet.getLastRow();
+
+    if (lastRow >= ALL_GUESTS_DATA_ROW) {
+      const rows = allGuestsSheet.getRange(ALL_GUESTS_DATA_ROW, 1, lastRow - 1, ALL_GUESTS_WIDTH).getValues();
+      rows.forEach((row) => {
+        const name = String(row[0] || "");
+        const status = String(row[1] || "");
+        const dietary = String(row[2] || "");
+        const updatedAt = row[3] || "";
+        const ownerKey = String(row[4] || normalize_(name));
+
+        if (!ownerKey || !status) return;
+
+        if (!responses[ownerKey]) {
+          responses[ownerKey] = {
+            id: ownerKey,
+            name,
+            rsvpOwner: name,
+            attendance: status === "Attending" ? "Attending" : "Unable to attend",
+            guestCount: 0,
+            attendees: [],
+            updatedAt,
+          };
+        }
+
+        responses[ownerKey].updatedAt = updatedAt || responses[ownerKey].updatedAt;
+
+        if (status === "Attending") {
+          responses[ownerKey].attendance = "Attending";
+          responses[ownerKey].attendees.push({ name, dietary });
+          responses[ownerKey].guestCount = responses[ownerKey].attendees.length;
+        } else {
+          responses[ownerKey].attendance = "Unable to attend";
+          responses[ownerKey].guestCount = 0;
+        }
+      });
+
+      return { ok: true, responses };
+    }
+  }
 
   GROUP_BLOCKS.forEach((block) => {
     const sheet = getOrCreateSheet_(spreadsheet, block.sheetName);
@@ -392,6 +526,10 @@ function readSnapshot_(spreadsheet) {
   });
 
   return { ok: true, responses };
+}
+
+function responseKey_(response) {
+  return String(response.id || response.guestListId || normalize_(response.rsvpOwner || response.name || "guest"));
 }
 
 function groupFormula_(sheetName, groupName, metric) {
