@@ -10,6 +10,7 @@
     <title>Moksha Shah & Qasim Raza Wedding RSVP</title>
     <link rel="icon" href="/images/garden-hero.png" type="image/png" />
     <link rel="preload" href="/images/garden-hero.png" as="image" />
+    <link rel="preload" href="/videos/garden-hero-video.mp4" as="video" type="video/mp4" />
   </head>
   <body>
     <div class="gate" id="guestGate" aria-labelledby="gateTitle">
@@ -65,12 +66,9 @@
 
       <main>
         <section class="hero" id="home" aria-labelledby="heroTitle">
-          <div class="hero__ambient" aria-hidden="true"></div>
-          <div class="hero__wind" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+          <video class="hero__video" aria-hidden="true" autoplay muted loop playsinline poster="/images/garden-hero.png">
+            <source src="/videos/garden-hero-video.mp4" type="video/mp4" />
+          </video>
           <div class="hero__shade" aria-hidden="true"></div>
           <div class="hero__layout">
             <div class="hero__content">

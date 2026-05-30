@@ -332,84 +332,22 @@ a {
   padding: clamp(3rem, 7vw, 7rem) 8% clamp(4.5rem, 8vw, 7rem);
   isolation: isolate;
   background-position: center bottom;
-  animation: heroFrameDrift 24s ease-in-out infinite alternate;
 }
 
-.hero__ambient,
-.hero__wind,
+.hero__video,
 .hero__fade {
   position: absolute;
   pointer-events: none;
 }
 
-.hero__ambient {
-  inset: -14% -10% auto auto;
-  z-index: 0;
-  width: min(46rem, 72vw);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, rgba(244, 114, 182, 0.28), transparent 58%),
-    radial-gradient(circle at 32% 70%, rgba(212, 148, 40, 0.22), transparent 48%),
-    radial-gradient(circle at 64% 34%, rgba(47, 111, 115, 0.2), transparent 44%);
-  filter: blur(18px);
-  opacity: 0.95;
-  transform: translate3d(0, 0, 0);
-  animation: heroGlow 11s ease-in-out infinite alternate;
-}
-
-.hero__wind {
+.hero__video {
   inset: 0;
-  z-index: 1;
-  overflow: hidden;
-  opacity: 0.72;
-}
-
-.hero__wind span {
-  position: absolute;
-  display: block;
-  background-image: url("/images/garden-hero.png");
-  background-repeat: no-repeat;
-  background-size: 100vw auto;
-  will-change: transform;
-  filter: saturate(1.05);
-  transform-origin: 50% 22%;
-  mix-blend-mode: multiply;
-}
-
-.hero__wind span:nth-child(1) {
-  top: -1.5rem;
-  right: -1.5rem;
-  width: min(37rem, 42vw);
-  height: min(23rem, 30vw);
-  background-position: right top;
-  -webkit-mask-image: radial-gradient(ellipse at 72% 20%, #000 0 38%, transparent 72%);
-  mask-image: radial-gradient(ellipse at 72% 20%, #000 0 38%, transparent 72%);
-  animation: leafSway 8.5s ease-in-out infinite alternate;
-}
-
-.hero__wind span:nth-child(2) {
-  right: -2rem;
-  bottom: 0;
-  width: min(42rem, 48vw);
-  height: min(26rem, 34vw);
-  background-position: right bottom;
-  opacity: 0.58;
-  -webkit-mask-image: radial-gradient(ellipse at 78% 74%, #000 0 42%, transparent 76%);
-  mask-image: radial-gradient(ellipse at 78% 74%, #000 0 42%, transparent 76%);
-  animation: leafSway 11s 900ms ease-in-out infinite alternate-reverse;
-}
-
-.hero__wind span:nth-child(3) {
-  left: -2rem;
-  bottom: -1rem;
-  width: min(32rem, 42vw);
-  height: min(21rem, 34vw);
-  background-position: left bottom;
-  opacity: 0.38;
-  -webkit-mask-image: radial-gradient(ellipse at 14% 78%, #000 0 36%, transparent 74%);
-  mask-image: radial-gradient(ellipse at 14% 78%, #000 0 36%, transparent 74%);
-  animation: flowerDrift 13s 400ms ease-in-out infinite alternate;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  transform: scale(1.01);
 }
 
 .hero__fade {
@@ -1038,50 +976,6 @@ tr[data-response="declined"] .response-pill {
   }
 }
 
-@keyframes heroGlow {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  to {
-    transform: translate3d(-3%, 4%, 0) scale(1.08);
-  }
-}
-
-@keyframes heroFrameDrift {
-  from {
-    background-position: 50% 100%;
-  }
-
-  to {
-    background-position: 52% 98%;
-  }
-}
-
-@keyframes leafSway {
-  from {
-    transform: translate3d(0, 0, 0) rotate(-0.35deg) skewX(0deg) scale(1.01);
-  }
-
-  48% {
-    transform: translate3d(-0.7rem, 0.35rem, 0) rotate(0.45deg) skewX(-1.2deg) scale(1.025);
-  }
-
-  to {
-    transform: translate3d(0.45rem, -0.2rem, 0) rotate(-0.15deg) skewX(0.8deg) scale(1.018);
-  }
-}
-
-@keyframes flowerDrift {
-  from {
-    transform: translate3d(0, 0, 0) rotate(0deg) scale(1.01);
-  }
-
-  to {
-    transform: translate3d(0.75rem, -0.35rem, 0) rotate(0.35deg) scale(1.025);
-  }
-}
-
 @media (max-width: 900px) {
   .site-header {
     grid-template-columns: auto 1fr;
@@ -1116,16 +1010,6 @@ tr[data-response="declined"] .response-pill {
   .hero__card {
     width: min(100%, 28rem);
     margin: 0;
-  }
-
-  .hero__wind span:nth-child(1) {
-    width: 52vw;
-    height: 34vw;
-  }
-
-  .hero__wind span:nth-child(2) {
-    width: 56vw;
-    height: 40vw;
   }
 
   .detail-grid,
@@ -1201,20 +1085,6 @@ tr[data-response="declined"] .response-pill {
 
   .hero__card strong {
     font-size: 2.2rem;
-  }
-
-  .hero__wind {
-    opacity: 0.45;
-  }
-
-  .hero__wind span:nth-child(1) {
-    width: 78vw;
-    height: 45vw;
-  }
-
-  .hero__wind span:nth-child(2),
-  .hero__wind span:nth-child(3) {
-    display: none;
   }
 
   .hero__details,
