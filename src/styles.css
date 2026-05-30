@@ -1,7 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@400;500;600;700&family=Great+Vibes&family=Manrope:wght@500;700;800&display=swap");
+
 :root {
   color: #2f261d;
   background: #fffaf0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Cormorant Infant", Georgia, "Times New Roman", serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --ivory: #fffaf0;
@@ -15,6 +17,8 @@
   --ink: #2f261d;
   --line: rgba(89, 72, 50, 0.2);
   --shadow: 0 24px 80px rgba(50, 35, 24, 0.18);
+  --sans: "Manrope", var(--sans);
+  --script: "Great Vibes", cursive;
 }
 
 * {
@@ -34,6 +38,7 @@ body {
   background:
     linear-gradient(180deg, rgba(255, 250, 240, 0.94), rgba(241, 231, 212, 0.96)),
     var(--ivory);
+  overflow-x: hidden;
 }
 
 button,
@@ -105,7 +110,7 @@ a {
 .eyebrow {
   margin: 0 0 0.6rem;
   color: var(--teal);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -115,7 +120,7 @@ a {
   display: grid;
   gap: 0.55rem;
   color: var(--deep-sage);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.86rem;
   font-weight: 700;
 }
@@ -149,7 +154,7 @@ a {
 .field small,
 .field-note {
   color: rgba(52, 79, 59, 0.78);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.78rem;
   font-weight: 800;
 }
@@ -169,7 +174,7 @@ a {
   min-height: 1.4rem;
   margin: 0.85rem 0;
   color: var(--wine);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -192,7 +197,7 @@ a {
   border-radius: 8px;
   padding: 0.75rem 1.1rem;
   color: var(--ink);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.9rem;
   font-weight: 800;
   line-height: 1.2;
@@ -274,7 +279,7 @@ a {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.9rem;
   font-weight: 800;
 }
@@ -299,7 +304,7 @@ a {
   justify-content: flex-end;
   gap: 0.5rem;
   min-width: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.84rem;
   font-weight: 800;
 }
@@ -321,44 +326,212 @@ a {
 
 .hero {
   display: grid;
-  min-height: 82svh;
-  max-height: 48rem;
-  place-items: center start;
-  padding: 6rem 8%;
+  min-height: calc(100svh - 4.8rem);
+  max-height: none;
+  place-items: stretch;
+  padding: clamp(3rem, 7vw, 7rem) 8% clamp(4.5rem, 8vw, 7rem);
+  isolation: isolate;
+  background-position: center bottom;
+  animation: heroFrameDrift 24s ease-in-out infinite alternate;
+}
+
+.hero__ambient,
+.hero__wind,
+.hero__fade {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hero__ambient {
+  inset: -14% -10% auto auto;
+  z-index: 0;
+  width: min(46rem, 72vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(244, 114, 182, 0.28), transparent 58%),
+    radial-gradient(circle at 32% 70%, rgba(212, 148, 40, 0.22), transparent 48%),
+    radial-gradient(circle at 64% 34%, rgba(47, 111, 115, 0.2), transparent 44%);
+  filter: blur(18px);
+  opacity: 0.95;
+  transform: translate3d(0, 0, 0);
+  animation: heroGlow 11s ease-in-out infinite alternate;
+}
+
+.hero__wind {
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 0.72;
+}
+
+.hero__wind span {
+  position: absolute;
+  display: block;
+  background-image: url("/images/garden-hero.png");
+  background-repeat: no-repeat;
+  background-size: 100vw auto;
+  will-change: transform;
+  filter: saturate(1.05);
+  transform-origin: 50% 22%;
+  mix-blend-mode: multiply;
+}
+
+.hero__wind span:nth-child(1) {
+  top: -1.5rem;
+  right: -1.5rem;
+  width: min(37rem, 42vw);
+  height: min(23rem, 30vw);
+  background-position: right top;
+  -webkit-mask-image: radial-gradient(ellipse at 72% 20%, #000 0 38%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 72% 20%, #000 0 38%, transparent 72%);
+  animation: leafSway 8.5s ease-in-out infinite alternate;
+}
+
+.hero__wind span:nth-child(2) {
+  right: -2rem;
+  bottom: 0;
+  width: min(42rem, 48vw);
+  height: min(26rem, 34vw);
+  background-position: right bottom;
+  opacity: 0.58;
+  -webkit-mask-image: radial-gradient(ellipse at 78% 74%, #000 0 42%, transparent 76%);
+  mask-image: radial-gradient(ellipse at 78% 74%, #000 0 42%, transparent 76%);
+  animation: leafSway 11s 900ms ease-in-out infinite alternate-reverse;
+}
+
+.hero__wind span:nth-child(3) {
+  left: -2rem;
+  bottom: -1rem;
+  width: min(32rem, 42vw);
+  height: min(21rem, 34vw);
+  background-position: left bottom;
+  opacity: 0.38;
+  -webkit-mask-image: radial-gradient(ellipse at 14% 78%, #000 0 36%, transparent 74%);
+  mask-image: radial-gradient(ellipse at 14% 78%, #000 0 36%, transparent 74%);
+  animation: flowerDrift 13s 400ms ease-in-out infinite alternate;
+}
+
+.hero__fade {
+  inset: auto 0 0;
+  z-index: 1;
+  height: 10rem;
+  background: linear-gradient(180deg, transparent, var(--ivory));
+}
+
+.hero__shade {
+  background:
+    radial-gradient(circle at 74% 20%, rgba(255, 250, 240, 0.18), transparent 36%),
+    linear-gradient(90deg, rgba(255, 250, 240, 0.96), rgba(255, 250, 240, 0.7) 42%, rgba(255, 250, 240, 0.2)),
+    linear-gradient(180deg, rgba(47, 38, 29, 0.1), rgba(47, 38, 29, 0.28));
+}
+
+.hero__layout {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(18rem, 0.58fr);
+  align-items: center;
+  gap: clamp(1.2rem, 5vw, 5rem);
+  width: min(100%, 78rem);
+  margin: auto 0;
 }
 
 .hero__content {
-  position: relative;
-  z-index: 1;
-  max-width: 48rem;
-  text-shadow: 0 1px 18px rgba(255, 250, 240, 0.95);
+  max-width: 54rem;
+  text-shadow: 0 1px 22px rgba(255, 250, 240, 0.92);
+  animation: heroRise 760ms cubic-bezier(0.2, 0.7, 0.18, 1) both;
 }
 
 .hero h1 {
-  font-size: 5rem;
+  max-width: 12ch;
+  font-size: clamp(4rem, 9.2vw, 8.6rem);
+  letter-spacing: 0;
+  text-wrap: balance;
 }
 
 .hero h1 span {
   display: block;
+  color: var(--wine);
+}
+
+.hero h1 em {
+  display: block;
+  margin: -0.26em 0 -0.12em;
   color: var(--teal);
-  font-size: 3rem;
+  font-family: var(--script);
+  font-size: 0.62em;
+  font-style: normal;
+  line-height: 1;
+  transform: translateX(0.42em);
+}
+
+.hero__intro {
+  max-width: 34rem;
+  margin: 1.2rem 0 0;
+  color: rgba(52, 79, 59, 0.92);
+  font-family: var(--sans);
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.hero__card {
+  align-self: center;
+  max-width: 24rem;
+  margin-left: auto;
+  padding: clamp(1.1rem, 2.5vw, 1.6rem);
+  border: 1px solid rgba(255, 250, 240, 0.64);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 240, 0.86), rgba(255, 250, 240, 0.68)),
+    rgba(255, 255, 255, 0.5);
+  box-shadow: 0 24px 80px rgba(50, 35, 24, 0.18);
+  backdrop-filter: blur(16px);
+  animation: heroRise 760ms 140ms cubic-bezier(0.2, 0.7, 0.18, 1) both;
+}
+
+.hero__card > span {
+  color: var(--teal);
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.hero__card strong {
+  display: block;
+  margin-top: 0.6rem;
+  color: var(--wine);
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  font-weight: 500;
+  line-height: 0.96;
+}
+
+.hero__card p {
+  margin: 0.9rem 0 0;
+  color: var(--deep-sage);
+  font-family: var(--sans);
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.55;
 }
 
 .hero__details {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-top: 1.35rem;
+  gap: 0.5rem;
+  margin-top: 1.15rem;
   color: var(--deep-sage);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.95rem;
+  font-family: var(--sans);
+  font-size: 0.76rem;
   font-weight: 800;
 }
 
 .hero__details span {
-  padding: 0.56rem 0.72rem;
+  padding: 0.5rem 0.62rem;
   border: 1px solid rgba(52, 79, 59, 0.18);
-  border-radius: 8px;
+  border-radius: 999px;
   background: rgba(255, 250, 240, 0.62);
 }
 
@@ -437,7 +610,7 @@ a {
 .choice-group legend,
 .event-group legend {
   color: var(--teal);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -455,7 +628,7 @@ a {
 .detail-card p {
   margin: 0.7rem 0 0;
   color: var(--deep-sage);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.95rem;
   font-weight: 700;
 }
@@ -509,7 +682,7 @@ a {
 .timeline p {
   margin: 0;
   color: #4f5d42;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.45;
@@ -587,7 +760,7 @@ a {
   padding: 0.7rem;
   color: var(--deep-sage);
   background: rgba(255, 255, 255, 0.55);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.88rem;
   font-weight: 800;
   line-height: 1.2;
@@ -639,7 +812,7 @@ a {
   min-height: 6.5rem;
   margin: 0 0 1.2rem;
   color: var(--deep-sage);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.96rem;
   font-weight: 800;
   line-height: 1.5;
@@ -653,7 +826,7 @@ a {
   padding: 2rem 8%;
   color: var(--ivory);
   background: var(--deep-sage);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.9rem;
   font-weight: 800;
 }
@@ -686,7 +859,7 @@ a {
   flex: 1 1 22rem;
   margin: 0;
   color: var(--deep-sage);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.9rem;
   font-weight: 800;
   line-height: 1.45;
@@ -704,7 +877,7 @@ a {
   color: var(--deep-sage);
   background: rgba(255, 250, 240, 0.74);
   cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.88rem;
   font-weight: 800;
 }
@@ -738,7 +911,7 @@ a {
 .admin-stat span {
   display: block;
   color: var(--teal);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -774,7 +947,7 @@ a {
   width: 100%;
   min-width: 58rem;
   border-collapse: collapse;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.86rem;
 }
 
@@ -847,10 +1020,66 @@ tr[data-response="declined"] .response-pill {
 .empty-state {
   margin: 0;
   color: var(--deep-sage);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--sans);
   font-size: 0.95rem;
   font-weight: 800;
   line-height: 1.45;
+}
+
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(1.4rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroGlow {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(-3%, 4%, 0) scale(1.08);
+  }
+}
+
+@keyframes heroFrameDrift {
+  from {
+    background-position: 50% 100%;
+  }
+
+  to {
+    background-position: 52% 98%;
+  }
+}
+
+@keyframes leafSway {
+  from {
+    transform: translate3d(0, 0, 0) rotate(-0.35deg) skewX(0deg) scale(1.01);
+  }
+
+  48% {
+    transform: translate3d(-0.7rem, 0.35rem, 0) rotate(0.45deg) skewX(-1.2deg) scale(1.025);
+  }
+
+  to {
+    transform: translate3d(0.45rem, -0.2rem, 0) rotate(-0.15deg) skewX(0.8deg) scale(1.018);
+  }
+}
+
+@keyframes flowerDrift {
+  from {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1.01);
+  }
+
+  to {
+    transform: translate3d(0.75rem, -0.35rem, 0) rotate(0.35deg) scale(1.025);
+  }
 }
 
 @media (max-width: 900px) {
@@ -870,16 +1099,33 @@ tr[data-response="declined"] .response-pill {
   }
 
   .hero {
-    min-height: 78svh;
-    padding: 5rem 6%;
+    min-height: auto;
+    padding: 4.5rem 6% 5.5rem;
+  }
+
+  .hero__layout {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
   }
 
   .hero h1 {
-    font-size: 3.3rem;
+    max-width: 10ch;
+    font-size: clamp(3.9rem, 15vw, 6.5rem);
   }
 
-  .hero h1 span {
-    font-size: 2.1rem;
+  .hero__card {
+    width: min(100%, 28rem);
+    margin: 0;
+  }
+
+  .hero__wind span:nth-child(1) {
+    width: 52vw;
+    height: 34vw;
+  }
+
+  .hero__wind span:nth-child(2) {
+    width: 56vw;
+    height: 40vw;
   }
 
   .detail-grid,
@@ -933,16 +1179,42 @@ tr[data-response="declined"] .response-pill {
   }
 
   .hero {
-    min-height: 76svh;
-    padding: 4rem 1rem 3rem;
+    padding: 3.8rem 1rem 5rem;
   }
 
   .hero h1 {
-    font-size: 2.7rem;
+    max-width: 9ch;
+    font-size: clamp(3.25rem, 18vw, 4.35rem);
   }
 
-  .hero h1 span {
-    font-size: 1.8rem;
+  .hero h1 em {
+    transform: translateX(0.26em);
+  }
+
+  .hero__intro {
+    font-size: 0.98rem;
+  }
+
+  .hero__card {
+    padding: 1rem;
+  }
+
+  .hero__card strong {
+    font-size: 2.2rem;
+  }
+
+  .hero__wind {
+    opacity: 0.45;
+  }
+
+  .hero__wind span:nth-child(1) {
+    width: 78vw;
+    height: 45vw;
+  }
+
+  .hero__wind span:nth-child(2),
+  .hero__wind span:nth-child(3) {
+    display: none;
   }
 
   .hero__details,
@@ -984,5 +1256,20 @@ tr[data-response="declined"] .response-pill {
 
   .admin-stats {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }

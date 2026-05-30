@@ -65,31 +65,51 @@
 
       <main>
         <section class="hero" id="home" aria-labelledby="heroTitle">
-          <div class="hero__shade" aria-hidden="true"></div>
-          <div class="hero__content">
-            <p class="eyebrow">You are cordially invited to the wedding of</p>
-            <h1 id="heroTitle">
-              Moksha Shah
-              <span>&</span>
-              Qasim Raza
-            </h1>
-            <div class="hero__details" aria-label="Wedding summary">
-              <span>The Calyx</span>
-              <span>Sydney Botanic Gardens</span>
-              <span>13 March 2027 at 9:00 AM</span>
-            </div>
-            <div class="hero__actions">
-              <a class="button button--primary" href="#rsvp">RSVP</a>
-              <a
-                class="button button--ghost"
-                href="https://www.google.com/maps/search/?api=1&query=The%20Calyx%20Sydney%20Botanic%20Gardens"
-                target="_blank"
-                rel="noreferrer"
-              >
-                View map
-              </a>
-            </div>
+          <div class="hero__ambient" aria-hidden="true"></div>
+          <div class="hero__wind" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
+          <div class="hero__shade" aria-hidden="true"></div>
+          <div class="hero__layout">
+            <div class="hero__content">
+              <p class="eyebrow">You are cordially invited to the wedding of</p>
+              <h1 id="heroTitle">
+                <span>Moksha Shah</span>
+                <em>&</em>
+                <span>Qasim Raza</span>
+              </h1>
+              <p class="hero__intro">
+                A garden morning at The Calyx, followed by ceremonies, lunch, and dinner with the people they love.
+              </p>
+              <div class="hero__actions">
+                <a class="button button--primary" href="#rsvp">RSVP</a>
+                <a
+                  class="button button--ghost"
+                  href="https://www.google.com/maps/search/?api=1&query=The%20Calyx%20Sydney%20Botanic%20Gardens"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View map
+                </a>
+              </div>
+            </div>
+
+            <aside class="hero__card" aria-label="Wedding summary">
+              <span>Saturday</span>
+              <strong>13 March 2027</strong>
+              <p>9:00 AM at The Calyx, Sydney Botanic Gardens</p>
+              <div class="hero__details">
+                <span>Hindu Ceremony</span>
+                <span>Lunch</span>
+                <span>Nikkah Ceremony</span>
+                <span>Reception Dinner</span>
+              </div>
+            </aside>
+
+          </div>
+          <div class="hero__fade" aria-hidden="true"></div>
         </section>
 
         <section class="details-band" id="details" aria-labelledby="detailsTitle">
