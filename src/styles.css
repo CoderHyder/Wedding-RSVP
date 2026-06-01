@@ -496,6 +496,7 @@ a {
 }
 
 .details-band,
+.dress-code-band,
 .rsvp-band,
 .admin-band {
   padding: 5rem 8%;
@@ -507,6 +508,98 @@ a {
     radial-gradient(circle at 10% 20%, rgba(52, 79, 59, 0.12), transparent 30rem),
     linear-gradient(135deg, rgba(255, 250, 240, 0.95), rgba(245, 234, 216, 0.9)),
     #fffaf0;
+}
+
+.dress-code-band {
+  background:
+    radial-gradient(circle at 83% 12%, rgba(212, 148, 40, 0.13), transparent 27rem),
+    radial-gradient(circle at 8% 82%, rgba(52, 79, 59, 0.1), transparent 24rem),
+    linear-gradient(180deg, rgba(245, 234, 216, 0.96), rgba(255, 250, 240, 0.98)),
+    #f5ead8;
+}
+
+.dress-code-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 0.72fr);
+  align-items: center;
+  gap: clamp(2rem, 5.5vw, 5.5rem);
+  max-width: 76rem;
+  margin: 0 auto;
+}
+
+.dress-code-copy {
+  display: grid;
+  gap: 1.25rem;
+  align-content: center;
+  max-width: 40rem;
+}
+
+.dress-code-copy h2 {
+  margin: 0;
+  color: var(--wine);
+  font-size: clamp(3.15rem, 5.4vw, 5.7rem);
+  font-weight: 500;
+  line-height: 0.95;
+}
+
+.dress-code-copy > p:not(.eyebrow) {
+  max-width: 38rem;
+  margin: 0;
+  color: var(--deep-sage);
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  font-weight: 850;
+  line-height: 1.7;
+}
+
+.dress-code-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.35rem;
+}
+
+.dress-code-options article {
+  min-height: 9.6rem;
+  padding: 1.15rem 1.15rem 1.2rem;
+  border: 1px solid rgba(52, 79, 59, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 250, 240, 0.82);
+  box-shadow: 0 16px 42px rgba(50, 35, 24, 0.08);
+}
+
+.dress-code-options span {
+  display: block;
+  color: var(--wine);
+  font-size: 1.42rem;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.dress-code-options p {
+  margin: 0.62rem 0 0;
+  color: var(--deep-sage);
+  font-family: var(--sans);
+  font-size: 0.94rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.dress-code-guide {
+  width: min(100%, 29rem);
+  justify-self: end;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 250, 240, 0.78);
+  box-shadow: 0 24px 72px rgba(50, 35, 24, 0.13);
+}
+
+.dress-code-guide img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 @media (min-width: 1391px) {
@@ -1228,6 +1321,20 @@ tr[data-response="declined"] .response-pill {
     grid-template-columns: 1fr;
   }
 
+  .dress-code-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dress-code-copy {
+    max-width: 42rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .dress-code-guide {
+    justify-self: center;
+  }
+
   .admin-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1307,9 +1414,27 @@ tr[data-response="declined"] .response-pill {
   }
 
   .details-band,
+  .dress-code-band,
   .rsvp-band,
   .admin-band {
     padding: 3.5rem 1rem;
+  }
+
+  .dress-code-band {
+    padding-top: 3rem;
+  }
+
+  .dress-code-guide {
+    width: min(100%, 24rem);
+    border-radius: 8px;
+  }
+
+  .dress-code-copy {
+    text-align: left;
+  }
+
+  .dress-code-options {
+    grid-template-columns: 1fr;
   }
 
   .section-heading h2 {

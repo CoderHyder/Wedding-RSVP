@@ -10,7 +10,12 @@
     <title>Moksha Shah & Qasim Raza Wedding RSVP</title>
     <link rel="icon" href="/images/garden-hero.png" type="image/png" />
     <link rel="preload" href="/images/garden-hero.png" as="image" />
-    <link rel="preload" href="/videos/garden-hero-video.mp4" as="video" type="video/mp4" />
+    <link
+      rel="preload"
+      href="/videos/garden-hero-video.mp4"
+      as="video"
+      type="video/mp4"
+    />
   </head>
   <body>
     <div class="gate" id="guestGate" aria-labelledby="gateTitle">
@@ -43,7 +48,9 @@
           </label>
         </div>
         <p class="form-message" id="gateMessage" aria-live="polite"></p>
-        <button class="button button--primary" type="submit">Enter invitation</button>
+        <button class="button button--primary" type="submit">
+          Enter invitation
+        </button>
       </form>
     </div>
 
@@ -60,11 +67,22 @@
 
       <main>
         <section class="hero" id="home" aria-labelledby="heroTitle">
-          <video class="hero__video" aria-hidden="true" autoplay muted loop playsinline poster="/images/garden-hero.png">
+          <video
+            class="hero__video"
+            aria-hidden="true"
+            autoplay
+            muted
+            loop
+            playsinline
+            poster="/images/garden-hero.png"
+          >
             <source src="/videos/garden-hero-video.mp4" type="video/mp4" />
           </video>
           <div class="hero__shade" aria-hidden="true"></div>
-          <div class="hero__countdown countdown" aria-label="Countdown to wedding">
+          <div
+            class="hero__countdown countdown"
+            aria-label="Countdown to wedding"
+          >
             <div>
               <strong id="daysCount">0</strong>
               <span>Days</span>
@@ -87,7 +105,8 @@
                 <span>Qasim Raza</span>
               </h1>
               <p class="hero__intro">
-                A garden morning at The Calyx, Sydney Botanic Gardens, with the people they love.
+                A garden morning at The Calyx, Sydney Botanic Gardens, with the
+                people they love.
               </p>
               <div class="hero__actions">
                 <a class="button button--primary" href="#rsvp">RSVP</a>
@@ -101,7 +120,6 @@
                 </a>
               </div>
             </div>
-
           </div>
           <aside class="hero__cards" aria-label="Wedding summary">
             <article class="hero__info-card">
@@ -123,11 +141,18 @@
           <div class="hero__fade" aria-hidden="true"></div>
         </section>
 
-        <section class="details-band" id="details" aria-labelledby="detailsTitle">
+        <section
+          class="details-band"
+          id="details"
+          aria-labelledby="detailsTitle"
+        >
           <div class="section-heading">
             <p class="eyebrow">Wedding day</p>
             <h2 id="detailsTitle">The invitation</h2>
-            <p>All essential details in one place. The full agenda will be shared closer to the day.</p>
+            <p>
+              All essential details in one place. The full agenda will be shared
+              closer to the day.
+            </p>
           </div>
           <div class="detail-grid">
             <article class="detail-card">
@@ -148,30 +173,84 @@
           </div>
         </section>
 
+        <section class="dress-code-band" aria-labelledby="dressCodeTitle">
+          <div class="dress-code-layout">
+            <div class="dress-code-copy">
+              <h2 id="dressCodeTitle">Dress code</h2>
+              <p>
+                Please use the guide as the source of truth for attire. The goal
+                is polished, respectful, and comfortable for the full day.
+              </p>
+              <div class="dress-code-options">
+                <article>
+                  <span>Pick one direction</span>
+                  <p>The guide shows two accepted attire paths for guests.</p>
+                </article>
+                <article>
+                  <span>Keep it formal</span>
+                  <p>Choose neat, dressy pieces that feel appropriate for family photos.</p>
+                </article>
+              </div>
+            </div>
+            <figure class="dress-code-guide">
+              <img
+                src="/images/User_attachment.png"
+                alt="Wedding guest guide showing traditional Indian attire or western formal dress code options."
+              />
+            </figure>
+          </div>
+        </section>
+
         <section class="rsvp-band" id="rsvp" aria-labelledby="rsvpTitle">
           <div class="section-heading">
             <p class="eyebrow">RSVP</p>
             <h2 id="rsvpTitle">Join the celebration</h2>
-            <p>Submit once now, then come back with the same name anytime to update your response.</p>
+            <p>
+              Submit once now, then come back with the same name anytime to
+              update your response.
+            </p>
           </div>
           <div class="rsvp-layout">
             <form class="rsvp-form" id="rsvpForm" novalidate>
               <div class="field-row rsvp-owner-row">
                 <label class="field" for="rsvpName">
                   <span>RSVP submitted by</span>
-                  <input id="rsvpName" name="name" type="text" autocomplete="name" readonly required />
+                  <input
+                    id="rsvpName"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
+                    readonly
+                    required
+                  />
                 </label>
-                <input id="guestCount" name="guestCount" type="hidden" min="1" max="10" value="1" />
+                <input
+                  id="guestCount"
+                  name="guestCount"
+                  type="hidden"
+                  min="1"
+                  max="10"
+                  value="1"
+                />
               </div>
 
               <fieldset class="choice-group">
                 <legend>Attendance</legend>
                 <label class="choice">
-                  <input type="radio" name="attendance" value="Attending" checked />
+                  <input
+                    type="radio"
+                    name="attendance"
+                    value="Attending"
+                    checked
+                  />
                   <span>Attending</span>
                 </label>
                 <label class="choice">
-                  <input type="radio" name="attendance" value="Unable to attend" />
+                  <input
+                    type="radio"
+                    name="attendance"
+                    value="Unable to attend"
+                  />
                   <span>Unable to attend</span>
                 </label>
               </fieldset>
@@ -180,9 +259,16 @@
                 <div class="attendee-heading">
                   <div>
                     <h3>Attendee names</h3>
-                    <p>Add every person attending so their name card and dietary notes are recorded.</p>
+                    <p>
+                      Add every person attending so their name card and dietary
+                      notes are recorded.
+                    </p>
                   </div>
-                  <button class="button button--ghost attendee-add" id="addGuestButton" type="button">
+                  <button
+                    class="button button--ghost attendee-add"
+                    id="addGuestButton"
+                    type="button"
+                  >
                     + Add Guest
                   </button>
                 </div>
@@ -191,34 +277,64 @@
 
               <p class="form-message" id="rsvpMessage" aria-live="polite"></p>
               <div class="form-actions">
-                <button class="button button--primary" id="rsvpSubmitButton" type="submit">
+                <button
+                  class="button button--primary"
+                  id="rsvpSubmitButton"
+                  type="submit"
+                >
                   Submit RSVP
                 </button>
-                <button class="button button--secondary" id="calendarButton" type="button">Add to calendar</button>
+                <button
+                  class="button button--secondary"
+                  id="calendarButton"
+                  type="button"
+                >
+                  Add to calendar
+                </button>
               </div>
               <div class="rsvp-edit-preview" aria-live="polite">
-                <span class="rsvp-edit-preview__check" aria-hidden="true">✓</span>
+                <span class="rsvp-edit-preview__check" aria-hidden="true"
+                  >✓</span
+                >
                 <span>RSVP confirmed and saved.</span>
-                <button id="formEditRsvpButton" type="button">Edit Response</button>
+                <button id="formEditRsvpButton" type="button">
+                  Edit Response
+                </button>
               </div>
             </form>
 
-            <aside class="rsvp-confirmation" id="rsvpConfirmation" aria-live="polite">
+            <aside
+              class="rsvp-confirmation"
+              id="rsvpConfirmation"
+              aria-live="polite"
+            >
               <p class="eyebrow">Response</p>
               <h3>Awaiting RSVP</h3>
-              <p id="rsvpSummary">Your response will appear here after submission.</p>
+              <p id="rsvpSummary">
+                Your response will appear here after submission.
+              </p>
               <div class="rsvp-update-note" id="rsvpUpdateNote" hidden>
                 <strong>Need to change something?</strong>
                 <span>Your saved response can be edited here anytime.</span>
               </div>
-              <button class="button button--secondary" id="editRsvpButton" type="button" hidden>
+              <button
+                class="button button--secondary"
+                id="editRsvpButton"
+                type="button"
+                hidden
+              >
                 Edit Response
               </button>
             </aside>
           </div>
         </section>
 
-        <section class="admin-band" id="admin" aria-labelledby="adminTitle" hidden>
+        <section
+          class="admin-band"
+          id="admin"
+          aria-labelledby="adminTitle"
+          hidden
+        >
           <div class="section-heading">
             <p class="eyebrow">Admin</p>
             <h2 id="adminTitle">Guest list and responses</h2>
@@ -239,13 +355,27 @@
           </div>
 
           <div class="admin-panel" id="adminGuestsPanel">
-            <div class="admin-stats" id="adminStats" aria-label="RSVP summary"></div>
+            <div
+              class="admin-stats"
+              id="adminStats"
+              aria-label="RSVP summary"
+            ></div>
             <div class="admin-tools">
               <label class="field admin-search" for="guestSearch">
                 <span>Search guests</span>
-                <input id="guestSearch" type="search" placeholder="Name, status, response" />
+                <input
+                  id="guestSearch"
+                  type="search"
+                  placeholder="Name, status, response"
+                />
               </label>
-              <button class="button button--secondary" id="exportGuests" type="button">Export CSV</button>
+              <button
+                class="button button--secondary"
+                id="exportGuests"
+                type="button"
+              >
+                Export CSV
+              </button>
             </div>
             <div class="guest-table-wrap">
               <table class="guest-table">
