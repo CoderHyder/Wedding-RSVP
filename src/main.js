@@ -16,7 +16,6 @@ const gateFirstName = document.querySelector("#gateFirstName");
 const gateLastName = document.querySelector("#gateLastName");
 const gateMessage = document.querySelector("#gateMessage");
 const siteShell = document.querySelector("#siteShell");
-const adminNavLink = document.querySelector("#adminNavLink");
 const adminSection = document.querySelector("#admin");
 const guestNameDisplay = document.querySelector("#guestNameDisplay");
 const changeGuest = document.querySelector("#changeGuest");
@@ -26,11 +25,12 @@ const rsvpMessage = document.querySelector("#rsvpMessage");
 const rsvpSubmitButton = document.querySelector("#rsvpSubmitButton");
 const rsvpConfirmation = document.querySelector("#rsvpConfirmation");
 const rsvpSummary = document.querySelector("#rsvpSummary");
-const downloadRsvp = document.querySelector("#downloadRsvp");
 const editRsvpButton = document.querySelector("#editRsvpButton");
+const formEditRsvpButton = document.querySelector("#formEditRsvpButton");
 const rsvpUpdateNote = document.querySelector("#rsvpUpdateNote");
 const calendarButton = document.querySelector("#calendarButton");
 const guestCountInput = document.querySelector("#guestCount");
+const addGuestButton = document.querySelector("#addGuestButton");
 const attendeeSection = document.querySelector("#attendeeSection");
 const attendeeList = document.querySelector("#attendeeList");
 const guestTableBody = document.querySelector("#guestTableBody");
@@ -186,7 +186,6 @@ function responseForGuest(guest) {
 function showGate(message = "") {
   gate.hidden = false;
   siteShell.hidden = true;
-  adminNavLink.hidden = true;
   adminSection.hidden = true;
   gateMessage.textContent = message;
   window.setTimeout(() => gateFirstName.focus(), 60);
@@ -200,7 +199,6 @@ function unlockSite(session) {
   gate.hidden = true;
   siteShell.hidden = false;
   guestNameDisplay.textContent = session.role === "admin" ? "Admin" : session.name;
-  adminNavLink.hidden = session.role !== "admin";
   adminSection.hidden = session.role !== "admin";
 
   if (currentResponse) {
@@ -221,10 +219,10 @@ function resetRsvpForm(name) {
   rsvpName.value = name;
   rsvpMessage.textContent = "";
   rsvpSubmitButton.textContent = "Submit RSVP";
+  rsvpForm.classList.remove("is-preview");
+  rsvpConfirmation.classList.remove("has-response");
   rsvpConfirmation.querySelector("h3").textContent = "Awaiting RSVP";
   rsvpSummary.textContent = "Your response will appear here after submission.";
-  downloadRsvp.disabled = true;
-  downloadRsvp.hidden = false;
   editRsvpButton.hidden = true;
   rsvpUpdateNote.hidden = true;
   guestCountInput.value = "1";
@@ -260,13 +258,14 @@ function getFormData() {
   const now = new Date().toISOString();
   const attendance = String(data.get("attendance") || "");
   const isAttending = attendance === "Attending";
-  const guestCount = isAttending ? Number(data.get("guestCount") || 1) : 0;
   const attendees = isAttending
     ? Array.from(attendeeList.querySelectorAll(".attendee-card")).map((card) => ({
         name: normalizeName(card.querySelector("[data-attendee-name]").value),
         dietary: normalizeName(card.querySelector("[data-attendee-dietary]").value),
       }))
     : [];
+  const guestCount = isAttending ? attendees.length : 0;
+  guestCountInput.value = String(guestCount);
 
   return {
     id: responseIdForSession(currentSession),
@@ -333,9 +332,12 @@ function renderConfirmation(rsvp) {
     ? "RSVP saved"
     : "Response saved";
   rsvpSummary.textContent = isAttending
-    ? `${rsvp.name} is attending with ${rsvp.guestCount} guest${rsvp.guestCount === 1 ? "" : "s"}: ${names.join(", ")}.`
+    ? rsvp.guestCount === 1
+      ? `${names[0] || rsvp.name} is attending.`
+      : `${rsvp.guestCount} attendees confirmed: ${names.join(", ")}.`
     : `${rsvp.name} is unable to attend.`;
-  downloadRsvp.disabled = false;
+  rsvpForm.classList.add("is-preview");
+  rsvpConfirmation.classList.add("has-response");
   editRsvpButton.hidden = false;
   rsvpUpdateNote.hidden = false;
   rsvpSubmitButton.textContent = "Update RSVP";
@@ -368,16 +370,19 @@ function setAttendeeControls(enabled) {
   attendeeSection.hidden = !enabled;
   guestCountInput.disabled = !enabled;
   guestCountInput.required = enabled;
+  addGuestButton.disabled = !enabled;
 
   if (!enabled) {
     guestCountInput.value = "0";
     attendeeList.innerHTML = "";
+    updateAttendeeControls();
     return;
   }
 
   if (Number(guestCountInput.value) < 1) {
     guestCountInput.value = "1";
   }
+  updateAttendeeControls();
 }
 
 function readCurrentAttendees() {
@@ -388,7 +393,7 @@ function readCurrentAttendees() {
 }
 
 function renderAttendeeFields(existingAttendees = readCurrentAttendees()) {
-  const count = fieldCountFromGuestCount(guestCountInput.value || existingAttendees.length || 1);
+  const count = fieldCountFromGuestCount(existingAttendees.length || guestCountInput.value || 1);
   const numericValue = Number(guestCountInput.value);
   if (!Number.isFinite(numericValue) || numericValue < 1) {
     guestCountInput.value = String(count);
@@ -400,7 +405,10 @@ function renderAttendeeFields(existingAttendees = readCurrentAttendees()) {
     const card = document.createElement("div");
     card.className = "attendee-card";
     card.innerHTML = `
-      <div class="attendee-card__title">Guest ${index + 1}</div>
+      <div class="attendee-card__title">
+        <span>${index === 0 ? "You / Guest 1" : `Guest ${index + 1}`}</span>
+        ${index === 0 ? "" : `<button class="attendee-remove" type="button" data-remove-attendee aria-label="Remove guest ${index + 1}">Remove</button>`}
+      </div>
       <label class="field" for="attendeeName${index}">
         <span>Full Name</span>
         <input id="attendeeName${index}" name="attendeeName${index}" type="text" autocomplete="name" data-attendee-name required />
@@ -414,6 +422,15 @@ function renderAttendeeFields(existingAttendees = readCurrentAttendees()) {
     card.querySelector("[data-attendee-dietary]").value = attendee.dietary;
     attendeeList.append(card);
   }
+
+  updateAttendeeControls();
+}
+
+function updateAttendeeControls() {
+  const count = attendeeList.querySelectorAll(".attendee-card").length;
+  guestCountInput.value = attendeeSection.hidden ? "0" : String(count || 1);
+  addGuestButton.disabled = attendeeSection.hidden || count >= MAX_GUEST_COUNT;
+  addGuestButton.textContent = count >= MAX_GUEST_COUNT ? "Guest limit reached" : "+ Add Guest";
 }
 
 function updateCountdown() {
@@ -436,23 +453,6 @@ function downloadBlob(contents, filename, type) {
   link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
-}
-
-function rsvpText(rsvp) {
-  const attendeeText = attendeesForRsvp(rsvp)
-    .map((attendee) => `- ${attendee.name}${attendee.dietary ? ` (${attendee.dietary})` : ""}`)
-    .join("\n");
-
-  return [
-    "Wedding RSVP: Moksha Shah & Qasim Raza",
-    `Name: ${rsvp.name}`,
-    `Attendance: ${rsvp.attendance}`,
-    `Guests in party: ${rsvp.guestCount}`,
-    "Attendees:",
-    attendeeText || "None",
-    `Submitted: ${new Date(rsvp.submittedAt).toLocaleString()}`,
-    `Last updated: ${new Date(rsvp.updatedAt).toLocaleString()}`,
-  ].join("\n");
 }
 
 function calendarFile() {
@@ -793,9 +793,35 @@ rsvpForm.addEventListener("change", (event) => {
 });
 
 rsvpForm.addEventListener("input", (event) => {
-  if (event.target === guestCountInput) {
-    renderAttendeeFields();
+  if (event.target.matches("[data-attendee-name], [data-attendee-dietary]")) {
+    updateAttendeeControls();
   }
+});
+
+addGuestButton.addEventListener("click", () => {
+  const attendees = readCurrentAttendees();
+  if (attendees.length >= MAX_GUEST_COUNT) {
+    setRsvpMessage("You can add up to 10 attendees.", "error");
+    return;
+  }
+
+  renderAttendeeFields([...attendees, { name: "", dietary: "" }]);
+  window.setTimeout(() => {
+    attendeeList.querySelector(".attendee-card:last-child [data-attendee-name]")?.focus();
+  }, 0);
+});
+
+attendeeList.addEventListener("click", (event) => {
+  const removeButton = event.target.closest("[data-remove-attendee]");
+  if (!removeButton) {
+    return;
+  }
+
+  const card = removeButton.closest(".attendee-card");
+  const attendees = readCurrentAttendees();
+  const index = Array.from(attendeeList.children).indexOf(card);
+  attendees.splice(index, 1);
+  renderAttendeeFields(attendees.length ? attendees : [{ name: currentSession.name, dietary: "" }]);
 });
 
 rsvpForm.addEventListener("submit", async (event) => {
@@ -831,19 +857,20 @@ rsvpForm.addEventListener("submit", async (event) => {
   }
 });
 
-downloadRsvp.addEventListener("click", () => {
-  if (!currentResponse) {
-    return;
-  }
-
-  downloadBlob(rsvpText(currentResponse), "qasim-raza-wedding-rsvp.txt", "text/plain");
-});
-
-editRsvpButton.addEventListener("click", () => {
+function openRsvpForEditing() {
+  rsvpForm.classList.remove("is-preview");
+  const firstAttendeeName = attendeeList.querySelector("[data-attendee-name]");
   rsvpForm.scrollIntoView({ behavior: "smooth", block: "start" });
+  firstAttendeeName?.focus({ preventScroll: true });
   window.setTimeout(() => {
-    guestCountInput.focus();
+    firstAttendeeName?.focus({ preventScroll: true });
   }, 420);
+}
+
+editRsvpButton.addEventListener("click", openRsvpForEditing);
+
+formEditRsvpButton.addEventListener("click", () => {
+  openRsvpForEditing();
 });
 
 calendarButton.addEventListener("click", () => {

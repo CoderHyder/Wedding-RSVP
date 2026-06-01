@@ -52,11 +52,6 @@
         <a class="brand" href="#home" aria-label="Wedding home">
           <span>M & Q</span>
         </a>
-        <nav class="site-nav" aria-label="Wedding sections">
-          <a href="#details">Details</a>
-          <a href="#rsvp">RSVP</a>
-          <a id="adminNavLink" href="#admin" hidden>Admin</a>
-        </nav>
         <div class="guest-chip">
           <span id="guestNameDisplay"></span>
           <button id="changeGuest" type="button">Change</button>
@@ -161,15 +156,12 @@
           </div>
           <div class="rsvp-layout">
             <form class="rsvp-form" id="rsvpForm" novalidate>
-              <div class="field-row">
+              <div class="field-row rsvp-owner-row">
                 <label class="field" for="rsvpName">
-                  <span>Name</span>
+                  <span>RSVP submitted by</span>
                   <input id="rsvpName" name="name" type="text" autocomplete="name" readonly required />
                 </label>
-                <label class="field compact inline-compact" for="guestCount">
-                  <span>Guests in party</span>
-                  <input id="guestCount" name="guestCount" type="number" min="1" max="10" value="1" required />
-                </label>
+                <input id="guestCount" name="guestCount" type="hidden" min="1" max="10" value="1" />
               </div>
 
               <fieldset class="choice-group">
@@ -186,8 +178,13 @@
 
               <div class="attendee-section" id="attendeeSection">
                 <div class="attendee-heading">
-                  <h3>Guest details</h3>
-                  <p>Enter each attendee's full name and any dietary notes.</p>
+                  <div>
+                    <h3>Attendee names</h3>
+                    <p>Add every person attending so their name card and dietary notes are recorded.</p>
+                  </div>
+                  <button class="button button--ghost attendee-add" id="addGuestButton" type="button">
+                    + Add Guest
+                  </button>
                 </div>
                 <div class="attendee-list" id="attendeeList"></div>
               </div>
@@ -198,6 +195,11 @@
                   Submit RSVP
                 </button>
                 <button class="button button--secondary" id="calendarButton" type="button">Add to calendar</button>
+              </div>
+              <div class="rsvp-edit-preview" aria-live="polite">
+                <span class="rsvp-edit-preview__check" aria-hidden="true">✓</span>
+                <span>RSVP confirmed and saved.</span>
+                <button id="formEditRsvpButton" type="button">Edit Response</button>
               </div>
             </form>
 
@@ -210,10 +212,7 @@
                 <span>Your saved response can be edited here anytime.</span>
               </div>
               <button class="button button--secondary" id="editRsvpButton" type="button" hidden>
-                Edit response
-              </button>
-              <button class="button button--ghost" id="downloadRsvp" type="button" disabled>
-                Download RSVP
+                Edit Response
               </button>
             </aside>
           </div>
