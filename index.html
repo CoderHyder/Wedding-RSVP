@@ -98,15 +98,17 @@
           </div>
           <div class="hero__layout">
             <div class="hero__content">
-              <p class="eyebrow">You are cordially invited to the wedding of</p>
+              <p class="eyebrow">
+                You are cordially invited to the auspicious wedding of
+              </p>
               <h1 id="heroTitle">
                 <span>Moksha Shah</span>
                 <em>&</em>
                 <span>Qasim Raza</span>
               </h1>
               <p class="hero__intro">
-                A garden morning at The Calyx, Sydney Botanic Gardens, with the
-                people they love.
+                A wedding at The Calyx in Sydney's Botanic Gardens with the
+                people closest to them.
               </p>
               <div class="hero__actions">
                 <a class="button button--primary" href="#rsvp">RSVP</a>
@@ -130,7 +132,7 @@
             <article class="hero__info-card">
               <span>Time</span>
               <strong>9:00 AM</strong>
-              <p>Guest arrival from the morning program</p>
+              <p>Please arrive from 9:00 AM</p>
             </article>
             <article class="hero__info-card">
               <span>Venue</span>
@@ -150,8 +152,8 @@
             <p class="eyebrow">Wedding day</p>
             <h2 id="detailsTitle">The invitation</h2>
             <p>
-              All essential details in one place. The full agenda will be shared
-              closer to the day.
+              Find the key details below. The full wedding-day agenda will be
+              shared closer to the date.
             </p>
           </div>
           <div class="detail-grid">
@@ -163,7 +165,7 @@
             <article class="detail-card">
               <span>Time</span>
               <strong>9:00 AM</strong>
-              <p>Guest arrival from the morning program</p>
+              <p>Please arrive from 9:00 AM</p>
             </article>
             <article class="detail-card">
               <span>Venue</span>
@@ -176,26 +178,18 @@
         <section class="dress-code-band" aria-labelledby="dressCodeTitle">
           <div class="dress-code-layout">
             <div class="dress-code-copy">
+              <p class="eyebrow">Guest attire</p>
               <h2 id="dressCodeTitle">Dress code</h2>
               <p>
-                Please use the guide as the source of truth for attire. The goal
-                is polished, respectful, and comfortable for the full day.
+                Traditional Indian attire and Western formal wear are both
+                welcome. Please choose something polished and formal for the
+                wedding day.
               </p>
-              <div class="dress-code-options">
-                <article>
-                  <span>Pick one direction</span>
-                  <p>The guide shows two accepted attire paths for guests.</p>
-                </article>
-                <article>
-                  <span>Keep it formal</span>
-                  <p>Choose neat, dressy pieces that feel appropriate for family photos.</p>
-                </article>
-              </div>
             </div>
-            <figure class="dress-code-guide">
+            <figure class="dress-code-visual">
               <img
-                src="/images/User_attachment.png"
-                alt="Wedding guest guide showing traditional Indian attire or western formal dress code options."
+                src="/images/dress-code-outfits.png"
+                alt="Examples of traditional Indian attire and western formal outfits for wedding guests."
               />
             </figure>
           </div>
@@ -206,7 +200,7 @@
             <p class="eyebrow">RSVP</p>
             <h2 id="rsvpTitle">Join the celebration</h2>
             <p>
-              Submit once now, then come back with the same name anytime to
+              Submit your RSVP now, then return with the same name anytime to
               update your response.
             </p>
           </div>
@@ -260,8 +254,8 @@
                   <div>
                     <h3>Attendee names</h3>
                     <p>
-                      Add every person attending so their name card and dietary
-                      notes are recorded.
+                      Add each person attending so their name card and dietary
+                      notes can be prepared.
                     </p>
                   </div>
                   <button
@@ -269,7 +263,7 @@
                     id="addGuestButton"
                     type="button"
                   >
-                    + Add Guest
+                    + Add guest
                   </button>
                 </div>
                 <div class="attendee-list" id="attendeeList"></div>
@@ -298,7 +292,7 @@
                 >
                 <span>RSVP confirmed and saved.</span>
                 <button id="formEditRsvpButton" type="button">
-                  Edit Response
+                  Edit response
                 </button>
               </div>
             </form>
@@ -315,7 +309,7 @@
               </p>
               <div class="rsvp-update-note" id="rsvpUpdateNote" hidden>
                 <strong>Need to change something?</strong>
-                <span>Your saved response can be edited here anytime.</span>
+                <span>You can edit your saved response here anytime.</span>
               </div>
               <button
                 class="button button--secondary"
@@ -323,7 +317,7 @@
                 type="button"
                 hidden
               >
-                Edit Response
+                Edit response
               </button>
             </aside>
           </div>
@@ -383,8 +377,8 @@
                   <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Response</th>
-                    <th scope="col">Dietary Notes</th>
-                    <th scope="col">Updated At</th>
+                    <th scope="col">Dietary notes</th>
+                    <th scope="col">Updated at</th>
                   </tr>
                 </thead>
                 <tbody id="guestTableBody"></tbody>

@@ -222,7 +222,7 @@ function resetRsvpForm(name) {
   rsvpForm.classList.remove("is-preview");
   rsvpConfirmation.classList.remove("has-response");
   rsvpConfirmation.querySelector("h3").textContent = "Awaiting RSVP";
-  rsvpSummary.textContent = "Your response will appear here after submission.";
+  rsvpSummary.textContent = "Your response will appear here after you submit.";
   editRsvpButton.hidden = true;
   rsvpUpdateNote.hidden = true;
   guestCountInput.value = "1";
@@ -406,11 +406,11 @@ function renderAttendeeFields(existingAttendees = readCurrentAttendees()) {
     card.className = "attendee-card";
     card.innerHTML = `
       <div class="attendee-card__title">
-        <span>${index === 0 ? "You / Guest 1" : `Guest ${index + 1}`}</span>
+        <span>${index === 0 ? "You / guest 1" : `Guest ${index + 1}`}</span>
         ${index === 0 ? "" : `<button class="attendee-remove" type="button" data-remove-attendee aria-label="Remove guest ${index + 1}">Remove</button>`}
       </div>
       <label class="field" for="attendeeName${index}">
-        <span>Full Name</span>
+        <span>Full name</span>
         <input id="attendeeName${index}" name="attendeeName${index}" type="text" autocomplete="name" data-attendee-name required />
       </label>
       <label class="field" for="attendeeDietary${index}">
@@ -430,7 +430,7 @@ function updateAttendeeControls() {
   const count = attendeeList.querySelectorAll(".attendee-card").length;
   guestCountInput.value = attendeeSection.hidden ? "0" : String(count || 1);
   addGuestButton.disabled = attendeeSection.hidden || count >= MAX_GUEST_COUNT;
-  addGuestButton.textContent = count >= MAX_GUEST_COUNT ? "Guest limit reached" : "+ Add Guest";
+  addGuestButton.textContent = count >= MAX_GUEST_COUNT ? "Guest limit reached" : "+ Add guest";
 }
 
 function updateCountdown() {
@@ -467,7 +467,7 @@ function calendarFile() {
     "DTEND:20270313T120000Z",
     "SUMMARY:Wedding of Moksha Shah and Qasim Raza",
     "LOCATION:The Calyx, Sydney Botanic Gardens, Sydney NSW",
-    "DESCRIPTION:Hindu Ceremony, Lunch, Nikkah Ceremony, Reception Dinner.",
+    "DESCRIPTION:Hindu ceremony, lunch, Nikkah ceremony, and reception dinner.",
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
@@ -570,7 +570,7 @@ function renderAdminSheetLink(statusText = "") {
   if (SHEET_URL) {
     adminSheetLink.href = SHEET_URL;
     adminSheetLink.hidden = false;
-    adminSheetStatus.textContent = statusText || "Open the shared Google Sheet for the full tracker and responses.";
+    adminSheetStatus.textContent = statusText || "Open the shared Google Sheet to view the full tracker and responses.";
     return;
   }
 
@@ -578,8 +578,8 @@ function renderAdminSheetLink(statusText = "") {
   adminSheetStatus.textContent =
     statusText ||
     (SHEETS_ENDPOINT
-      ? "Sheet sync is configured. Add VITE_GOOGLE_SHEET_URL to show a fixed admin Sheet link here."
-      : "Sheet sync is not connected yet. Deploy the Apps Script, then add the Web App URL to .env.");
+      ? "Sheet sync is configured. Add VITE_GOOGLE_SHEET_URL to show a fixed admin sheet link here."
+      : "Sheet sync is not connected yet. Deploy the Apps Script, then add the web app URL to .env.");
 }
 
 async function refreshAdminSnapshot() {
@@ -598,7 +598,7 @@ async function refreshAdminSnapshot() {
       renderAdminSheetLink(
         SHEET_URL
           ? "Showing local browser responses plus the latest synced Google Sheet responses."
-          : "Showing synced Google Sheet responses. Add VITE_GOOGLE_SHEET_URL to show a fixed admin Sheet link here.",
+          : "Showing synced Google Sheet responses. Add VITE_GOOGLE_SHEET_URL to show a fixed admin sheet link here.",
       );
       renderAdminStats();
       renderGuestTable();
@@ -842,14 +842,14 @@ rsvpForm.addEventListener("submit", async (event) => {
     const syncStatus = await syncToGoogleSheets(rsvp);
     setRsvpMessage(
       syncStatus === "sent"
-        ? "✓ RSVP confirmed. Your response has been sent to the wedding sheet."
+        ? "RSVP confirmed. Your response has been sent to the wedding sheet."
         : syncStatus === "unverified"
-          ? "✓ RSVP confirmed on this device. Sheet sync could not be verified yet."
-        : "✓ RSVP confirmed. You can come back anytime to edit your response.",
+          ? "RSVP confirmed on this device. Sheet sync could not be verified yet."
+        : "RSVP confirmed. You can come back anytime to edit your response.",
       "success",
     );
   } catch {
-    setRsvpMessage("✓ RSVP confirmed on this device. Sheet sync could not be reached right now.", "success");
+    setRsvpMessage("RSVP confirmed on this device. Sheet sync could not be reached right now.", "success");
   }
 
   if (currentSession.role === "admin") {

@@ -4,7 +4,7 @@
   color: #2f261d;
   background: #fffaf0;
   font-family: "Cormorant Infant", Georgia, "Times New Roman", serif;
-  font-size: 17px;
+  font-size: 18px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --ivory: #fffaf0;
@@ -18,7 +18,7 @@
   --ink: #2f261d;
   --line: rgba(89, 72, 50, 0.2);
   --shadow: 0 24px 80px rgba(50, 35, 24, 0.18);
-  --sans: "Manrope", var(--sans);
+  --sans: "Manrope", "Helvetica Neue", Arial, sans-serif;
   --script: "Great Vibes", cursive;
 }
 
@@ -39,6 +39,7 @@ body {
   background:
     linear-gradient(180deg, rgba(255, 250, 240, 0.94), rgba(241, 231, 212, 0.96)),
     var(--ivory);
+  line-height: 1.55;
   overflow-x: hidden;
 }
 
@@ -112,8 +113,9 @@ a {
   margin: 0 0 0.6rem;
   color: var(--teal);
   font-family: var(--sans);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
+  line-height: 1.35;
   text-transform: uppercase;
 }
 
@@ -122,7 +124,7 @@ a {
   gap: 0.55rem;
   color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 0.86rem;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 
@@ -135,6 +137,8 @@ a {
   padding: 0.82rem 0.9rem;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.74);
+  font-size: 1rem;
+  line-height: 1.35;
   outline: none;
 }
 
@@ -154,10 +158,11 @@ a {
 
 .field small,
 .field-note {
-  color: rgba(52, 79, 59, 0.78);
+  color: rgba(52, 79, 59, 0.9);
   font-family: var(--sans);
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .field-note {
@@ -176,8 +181,9 @@ a {
   margin: 0.85rem 0;
   color: var(--wine);
   font-family: var(--sans);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
+  line-height: 1.45;
 }
 
 .form-message.is-success {
@@ -199,7 +205,7 @@ a {
   padding: 0.75rem 1.1rem;
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 0.9rem;
+  font-size: 0.94rem;
   font-weight: 800;
   line-height: 1.2;
   text-align: center;
@@ -295,7 +301,7 @@ a {
   gap: 0.5rem;
   min-width: 0;
   font-family: var(--sans);
-  font-size: 0.84rem;
+  font-size: 0.88rem;
   font-weight: 800;
 }
 
@@ -385,16 +391,21 @@ a {
   animation: heroRise 760ms cubic-bezier(0.2, 0.7, 0.18, 1) both;
 }
 
+.hero__content .eyebrow {
+  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
+  line-height: 1.45;
+}
+
 .hero h1 {
-  max-width: 12ch;
-  font-size: clamp(4rem, 8vw, 7.8rem);
+  max-width: max-content;
+  font-size: clamp(3.8rem, 7.2vw, 7.4rem);
   letter-spacing: 0;
-  text-wrap: balance;
 }
 
 .hero h1 span {
   display: block;
   color: var(--wine);
+  white-space: nowrap;
 }
 
 .hero h1 em {
@@ -411,11 +422,11 @@ a {
 .hero__intro {
   max-width: 34rem;
   margin: 1.2rem 0 0;
-  color: rgba(52, 79, 59, 0.92);
+  color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  font-size: clamp(0.94rem, 1.18vw, 1.04rem);
   font-weight: 700;
-  line-height: 1.7;
+  line-height: 1.55;
 }
 
 .hero__cards {
@@ -446,8 +457,9 @@ a {
 .hero__info-card > span {
   color: var(--teal);
   font-family: var(--sans);
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   font-weight: 800;
+  line-height: 1.35;
   text-transform: uppercase;
 }
 
@@ -464,9 +476,9 @@ a {
   margin: 0.62rem 0 0;
   color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 0.92rem;
-  font-weight: 800;
-  line-height: 1.4;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .hero__details {
@@ -511,6 +523,8 @@ a {
 }
 
 .dress-code-band {
+  min-height: clamp(38rem, 45vw, 46rem);
+  padding-block: clamp(6.5rem, 8vw, 8rem);
   background:
     radial-gradient(circle at 83% 12%, rgba(212, 148, 40, 0.13), transparent 27rem),
     radial-gradient(circle at 8% 82%, rgba(52, 79, 59, 0.1), transparent 24rem),
@@ -520,18 +534,18 @@ a {
 
 .dress-code-layout {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 0.72fr);
+  grid-template-columns: minmax(18rem, 0.72fr) minmax(34rem, 1.28fr);
   align-items: center;
-  gap: clamp(2rem, 5.5vw, 5.5rem);
-  max-width: 76rem;
+  gap: clamp(3rem, 5vw, 6rem);
+  max-width: 100rem;
   margin: 0 auto;
 }
 
 .dress-code-copy {
   display: grid;
-  gap: 1.25rem;
+  gap: 1.1rem;
   align-content: center;
-  max-width: 40rem;
+  max-width: 34rem;
 }
 
 .dress-code-copy h2 {
@@ -547,59 +561,23 @@ a {
   margin: 0;
   color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 1.04rem;
-  font-weight: 850;
+  font-size: clamp(1.04rem, 1.2vw, 1.12rem);
+  font-weight: 700;
   line-height: 1.7;
 }
 
-.dress-code-options {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 0.35rem;
-}
-
-.dress-code-options article {
-  min-height: 9.6rem;
-  padding: 1.15rem 1.15rem 1.2rem;
-  border: 1px solid rgba(52, 79, 59, 0.2);
-  border-radius: 8px;
-  background: rgba(255, 250, 240, 0.82);
-  box-shadow: 0 16px 42px rgba(50, 35, 24, 0.08);
-}
-
-.dress-code-options span {
-  display: block;
-  color: var(--wine);
-  font-size: 1.42rem;
-  font-weight: 700;
-  line-height: 1.05;
-}
-
-.dress-code-options p {
-  margin: 0.62rem 0 0;
-  color: var(--deep-sage);
-  font-family: var(--sans);
-  font-size: 0.94rem;
-  font-weight: 800;
-  line-height: 1.5;
-}
-
-.dress-code-guide {
-  width: min(100%, 29rem);
+.dress-code-visual {
+  width: min(100%, 54rem);
   justify-self: end;
   margin: 0;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-  background: rgba(255, 250, 240, 0.78);
-  box-shadow: 0 24px 72px rgba(50, 35, 24, 0.13);
 }
 
-.dress-code-guide img {
+.dress-code-visual img {
   display: block;
   width: 100%;
   height: auto;
+  filter: drop-shadow(0 26px 34px rgba(50, 35, 24, 0.12));
+  mix-blend-mode: multiply;
 }
 
 @media (min-width: 1391px) {
@@ -631,17 +609,17 @@ a {
 }
 
 .section-heading h2 {
-  font-size: 2.7rem;
+  font-size: clamp(2.45rem, 4vw, 3.25rem);
 }
 
 .section-heading p:not(.eyebrow) {
   max-width: 42rem;
   margin: 0.75rem 0 0;
-  color: rgba(52, 79, 59, 0.82);
+  color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 0.98rem;
-  font-weight: 800;
-  line-height: 1.6;
+  font-size: clamp(1rem, 1.1vw, 1.08rem);
+  font-weight: 700;
+  line-height: 1.7;
 }
 
 .detail-grid {
@@ -680,12 +658,12 @@ a {
 
 .detail-card span,
 .countdown span,
-.choice-group legend,
-.attendee-heading h3 {
+.choice-group legend {
   color: var(--teal);
   font-family: var(--sans);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 800;
+  line-height: 1.35;
   text-transform: uppercase;
 }
 
@@ -702,8 +680,9 @@ a {
   margin: 0.7rem 0 0;
   color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 0.95rem;
+  font-size: 0.86rem;
   font-weight: 700;
+  line-height: 1.45;
 }
 
 .countdown {
@@ -783,8 +762,9 @@ a {
   padding-top: 1rem;
   color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 0.9rem;
-  font-weight: 900;
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.45;
 }
 
 .rsvp-form.is-preview .rsvp-edit-preview {
@@ -881,7 +861,7 @@ a {
   color: var(--deep-sage);
   background: rgba(255, 255, 255, 0.55);
   font-family: var(--sans);
-  font-size: 0.88rem;
+  font-size: 0.94rem;
   font-weight: 800;
   line-height: 1.2;
   text-align: center;
@@ -915,12 +895,21 @@ a {
   margin: 0;
 }
 
+.attendee-heading h3 {
+  color: var(--wine);
+  font-size: clamp(1.35rem, 2vw, 1.65rem);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
 .attendee-heading p {
-  color: rgba(52, 79, 59, 0.74);
+  max-width: 34rem;
+  margin-top: 0.3rem;
+  color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 0.86rem;
-  font-weight: 800;
-  line-height: 1.4;
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.55;
 }
 
 .attendee-add {
@@ -953,8 +942,9 @@ a {
   gap: 0.75rem;
   color: var(--wine);
   font-family: var(--sans);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 900;
+  line-height: 1.35;
   text-transform: uppercase;
 }
 
@@ -966,7 +956,7 @@ a {
   background: rgba(121, 39, 53, 0.08);
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 900;
   text-transform: none;
 }
@@ -1015,9 +1005,9 @@ a {
   margin: 0 0 1.2rem;
   color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 0.96rem;
-  font-weight: 800;
-  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
 }
 
 .rsvp-update-note {
@@ -1030,8 +1020,9 @@ a {
   color: var(--deep-sage);
   background: rgba(255, 250, 240, 0.7);
   font-family: var(--sans);
-  font-size: 0.86rem;
-  font-weight: 800;
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .rsvp-update-note strong {
@@ -1052,8 +1043,9 @@ a {
   color: var(--ivory);
   background: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 0.9rem;
-  font-weight: 800;
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .site-footer p {
@@ -1085,9 +1077,9 @@ a {
   margin: 0;
   color: var(--deep-sage);
   font-family: var(--sans);
-  font-size: 0.9rem;
-  font-weight: 800;
-  line-height: 1.45;
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.55;
 }
 
 .admin-tabs {
@@ -1103,7 +1095,7 @@ a {
   background: rgba(255, 250, 240, 0.74);
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 0.88rem;
+  font-size: 0.94rem;
   font-weight: 800;
 }
 
@@ -1137,8 +1129,9 @@ a {
   display: block;
   color: var(--teal);
   font-family: var(--sans);
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   font-weight: 800;
+  line-height: 1.35;
   text-transform: uppercase;
 }
 
@@ -1173,7 +1166,8 @@ a {
   min-width: 42rem;
   border-collapse: collapse;
   font-family: var(--sans);
-  font-size: 0.86rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
 
 .guest-table th,
@@ -1190,7 +1184,8 @@ a {
   z-index: 1;
   color: #fffaf0;
   background: var(--deep-sage);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
   text-transform: uppercase;
 }
 
@@ -1206,8 +1201,8 @@ a {
 .guest-table td:first-child span {
   margin-top: 0.25rem;
   color: rgba(52, 79, 59, 0.74);
-  font-size: 0.78rem;
-  font-weight: 800;
+  font-size: 0.84rem;
+  font-weight: 700;
 }
 
 .status-pill,
@@ -1217,7 +1212,7 @@ a {
   min-height: 1.85rem;
   border-radius: 999px;
   padding: 0.35rem 0.58rem;
-  font-size: 0.76rem;
+  font-size: 0.82rem;
   font-weight: 900;
   white-space: nowrap;
 }
@@ -1282,7 +1277,6 @@ tr[data-response="declined"] .response-pill {
   }
 
   .hero h1 {
-    max-width: 11ch;
     font-size: clamp(4rem, 8.5vw, 7.2rem);
   }
 
@@ -1311,7 +1305,6 @@ tr[data-response="declined"] .response-pill {
   }
 
   .hero h1 {
-    max-width: 10ch;
     font-size: clamp(3.9rem, 15vw, 6.5rem);
   }
 
@@ -1323,6 +1316,12 @@ tr[data-response="declined"] .response-pill {
 
   .dress-code-layout {
     grid-template-columns: 1fr;
+    gap: 2.75rem;
+  }
+
+  .dress-code-band {
+    min-height: auto;
+    padding-block: 4.75rem;
   }
 
   .dress-code-copy {
@@ -1331,8 +1330,9 @@ tr[data-response="declined"] .response-pill {
     text-align: center;
   }
 
-  .dress-code-guide {
+  .dress-code-visual {
     justify-self: center;
+    width: min(100%, 45rem);
   }
 
   .admin-stats {
@@ -1375,8 +1375,7 @@ tr[data-response="declined"] .response-pill {
   }
 
   .hero h1 {
-    max-width: 9ch;
-    font-size: clamp(3.25rem, 18vw, 4.35rem);
+    font-size: clamp(3rem, 15vw, 4.35rem);
   }
 
   .hero h1 em {
@@ -1421,20 +1420,18 @@ tr[data-response="declined"] .response-pill {
   }
 
   .dress-code-band {
-    padding-top: 3rem;
-  }
-
-  .dress-code-guide {
-    width: min(100%, 24rem);
-    border-radius: 8px;
+    min-height: auto;
+    padding-top: 4.25rem;
+    padding-bottom: 4.25rem;
   }
 
   .dress-code-copy {
     text-align: left;
   }
 
-  .dress-code-options {
-    grid-template-columns: 1fr;
+  .dress-code-visual {
+    width: 100%;
+    margin-left: 0;
   }
 
   .section-heading h2 {
