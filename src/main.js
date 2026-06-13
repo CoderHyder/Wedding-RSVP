@@ -5,7 +5,7 @@ const SESSION_COOKIE = "mq_wedding_session";
 const SESSION_KEY = "mq-wedding-session";
 const RESPONSES_KEY = "mq-wedding-responses";
 const LEGACY_RSVP_KEY = "mq-wedding-rsvp";
-const EVENT_START = new Date("2027-03-12T22:00:00Z");
+const EVENT_START = new Date("2027-03-12T23:00:00Z");
 const DEFAULT_SHEET_URL = "https://docs.google.com/spreadsheets/d/17xmJPW92f4y7CPbhXUzC2HbGlLXKCte-qYB7eP1RPnk/edit";
 const SHEETS_ENDPOINT = import.meta.env.VITE_GOOGLE_SCRIPT_URL || "";
 const SHEET_URL = import.meta.env.VITE_GOOGLE_SHEET_URL || DEFAULT_SHEET_URL;
@@ -463,7 +463,7 @@ function calendarFile() {
     "BEGIN:VEVENT",
     "UID:moksha-shah-qasim-raza-wedding-20270313@wedding-rsvp",
     `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")}`,
-    "DTSTART:20270312T220000Z",
+    "DTSTART:20270312T230000Z",
     "DTEND:20270313T120000Z",
     "SUMMARY:Wedding of Moksha Shah and Qasim Raza",
     "LOCATION:The Calyx, Sydney Botanic Gardens, Sydney NSW",
